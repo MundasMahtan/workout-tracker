@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏊 Workout Scheduler V3.2 Final</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d5016;
+            --accent-gold: #d4af37;
+            --light-green: #4a7c2c;
+            --bg-white: #ffffff;
+            --text-dark: #2c3e50;
+            --success-green: #27ae60;
+            --light-gray: #f8f9fa;
+            --border-gray: #dee2e6;
+            --warning-orange: #f39c12;
+            --danger-red: #e74c3c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--light-gray);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--light-green) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .week-info {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            font-weight: 500;
+        }
+
+        .sync-status {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            color: var(--primary-green);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .day-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            border: 2px solid var(--border-gray);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .day-item:hover {
+            border-color: var(--primary-green);
+            background: var(--light-gray);
+        }
+
+        .day-item.completed {
+            border-color: var(--success-green);
+            background: rgba(39, 174, 96, 0.05);
+        }
+
+        .day-item.skipped {
+            border-color: var(--warning-orange);
+            background: rgba(243, 156, 18, 0.05);
+        }
+
+        .day-label {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .day-date {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-right: 0.75rem;
+        }
+
+        .day-status {
+            font-size: 1.25rem;
+        }
+
+        .workout-badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .workout-badge.swim {
+            background: rgba(52, 152, 219, 0.15);
+            color: #2980b9;
+        }
+
+        .workout-badge.strength {
+            background: rgba(155, 89, 182, 0.15);
+            color: #8e44ad;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--light-green);
+            transform: translateY(-1px);
+        }
+
+        .btn-gold {
+            background: var(--accent-gold);
+            color: var(--text-dark);
+        }
+
+        .btn-gold:hover {
+            background: #c9a52b;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            background: var(--primary-green);
+            color: white;
+            padding: 1.25rem;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .alert-info {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid #3498db;
+            color: #2c3e50;
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid #f39c12;
+            color: #2c3e50;
+        }
+
+        .workout-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .workout-section h3 {
+            color: var(--primary-green);
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .workout-detail {
+            padding: 0.5rem 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group input[type="time"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .radio-item {
+            flex: 1;
+            min-width: 60px;
+        }
+
+        .radio-item input[type="radio"] {
+            display: none;
+        }
+
+        .radio-item label {
+            display: block;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .radio-item input[type="radio"]:checked + label {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+
+        .checkbox-group {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .planning-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .planning-section h3 {
+            font-size: 1rem;
+            color: var(--primary-green);
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-actions {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 768px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .setup-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .setup-card h2 {
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .setup-card p {
+            color: #6c757d;
+            margin-bottom: 1.5rem;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+
+    <script>
+        const PROGRAMS = {
+            swimming: {
+                1: {
+                    wed: {
+                        type: 'Endurance Base',
+                        total: '2500m',
+                        time: '~55 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim (60% easy)',
+                                    '200m kick',
+                                    '300m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: [
+                                    '4×50m choice drill (catch-up, fingertip drag, etc.)'
+                                ]
+                            },
+                            {
+                                name: 'Main Set (1100m)',
+                                distance: '1100m',
+                                details: [
+                                    '800m continuous @ 70% effort',
+                                    'Target: ~2:10-2:15/100m pace',
+                                    'Focus: Smooth, sustainable rhythm'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy swim']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Base Intervals',
+                        total: '2600m',
+                        time: '~57 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim (60%)',
+                                    '200m kick',
+                                    '300m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '10×100m @ 2:05 (base + 5 sec to start conservatively)',
+                                    'Target: Swim ~1:58, get 7 sec rest',
+                                    '70% effort, "boring not hard"',
+                                    'Rest: 60 sec after set',
+                                    '2×100m easy recovery'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                2: {
+                    wed: {
+                        type: 'Longer Endurance',
+                        total: '2600m',
+                        time: '~57 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim (60%)',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '1000m continuous @ 70%',
+                                    'Target: ~2:10/100m pace',
+                                    'Break mentally into 10×100m if needed'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Base Intervals',
+                        total: '2700m',
+                        time: '~58 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim',
+                                    '200m kick',
+                                    '300m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1300m)',
+                                distance: '1300m',
+                                details: [
+                                    '12×100m @ 2:00 (your base!)',
+                                    'Target: Swim ~1:53-1:55, get 5-7 sec rest',
+                                    '70% effort',
+                                    'This is your bread and butter set'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                3: {
+                    wed: {
+                        type: 'Steady State',
+                        total: '2700m',
+                        time: '~59 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice (focus on technique)']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '1200m continuous @ 70%',
+                                    'OR 2×600m @ 72% (1 min rest between)',
+                                    'Your choice based on how you feel'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Longer Intervals',
+                        total: '2800m',
+                        time: '~60 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim',
+                                    '300m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1400m)',
+                                distance: '1400m',
+                                details: [
+                                    '8×150m @ 3:00 (base × 1.5)',
+                                    'Target: Swim ~2:53-2:55, get 5-7 sec rest',
+                                    '70% effort',
+                                    'Building endurance at distance'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                4: {
+                    wed: {
+                        type: 'Steady State',
+                        total: '2700m',
+                        time: '~59 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '1200m continuous @ 70%',
+                                    'OR 2×600m @ 72% (1 min rest between)'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Longer Intervals',
+                        total: '2800m',
+                        time: '~60 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim',
+                                    '300m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1400m)',
+                                distance: '1400m',
+                                details: [
+                                    '8×150m @ 3:00',
+                                    '70% effort'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                5: {
+                    wed: {
+                        type: 'Longer Endurance',
+                        total: '2800m',
+                        time: '~60 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1300m)',
+                                distance: '1300m',
+                                details: [
+                                    '1300m continuous @ 70-72%',
+                                    'Slightly faster than previous weeks',
+                                    'Still controlled'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Mixed Intervals',
+                        total: '2900m',
+                        time: '~62 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim',
+                                    '300m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '8×100m @ 2:00 (base) - 70% effort',
+                                    'Rest 90 sec',
+                                    '5×150m @ 3:00 - 70% effort'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                6: {
+                    wed: {
+                        type: 'Longer Endurance',
+                        total: '2800m',
+                        time: '~60 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1300m)',
+                                distance: '1300m',
+                                details: [
+                                    '1300m continuous @ 70-72%'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Mixed Intervals',
+                        total: '2900m',
+                        time: '~62 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '500m swim',
+                                    '300m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '8×100m @ 2:00',
+                                    'Rest 90 sec',
+                                    '5×150m @ 3:00'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                7: {
+                    wed: {
+                        type: 'Easy Endurance (RECOVERY)',
+                        total: '2400m',
+                        time: '~52 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (800m)',
+                                distance: '800m',
+                                details: [
+                                    '500m swim (60% easy)',
+                                    '200m kick',
+                                    '100m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m technique focus']
+                            },
+                            {
+                                name: 'Main Set (1100m)',
+                                distance: '1100m',
+                                details: [
+                                    '1000m continuous @ 65-70% (EASY!)',
+                                    'Recovery pace',
+                                    'Focus on perfect technique'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Easy Intervals (RECOVERY)',
+                        total: '2500m',
+                        time: '~54 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (800m)',
+                                distance: '800m',
+                                details: [
+                                    '500m swim',
+                                    '200m kick',
+                                    '100m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (200m)',
+                                distance: '200m',
+                                details: ['4×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1300m)',
+                                distance: '1300m',
+                                details: [
+                                    '10×100m @ 2:10 (base + 10 sec extra rest)',
+                                    '65-70% effort (RECOVERY!)',
+                                    'Should feel easy'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                8: {
+                    wed: {
+                        type: 'Endurance',
+                        total: '2900m',
+                        time: '~62 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '700m swim',
+                                    '200m kick',
+                                    '100m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1400m)',
+                                distance: '1400m',
+                                details: [
+                                    '1400m continuous @ 70%',
+                                    'Back to normal training pace'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Longer Intervals',
+                        total: '3000m',
+                        time: '~64 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '6×200m @ 4:00 (base × 2)',
+                                    'Target: Swim ~3:53-3:55, get 5-7 sec rest',
+                                    '70% effort',
+                                    'Mental toughness builder'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                9: {
+                    wed: {
+                        type: 'Endurance',
+                        total: '2900m',
+                        time: '~62 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '700m swim',
+                                    '200m kick',
+                                    '100m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1400m)',
+                                distance: '1400m',
+                                details: ['1400m continuous @ 70%']
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Longer Intervals',
+                        total: '3000m',
+                        time: '~64 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '6×200m @ 4:00',
+                                    '70% effort'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                10: {
+                    wed: {
+                        type: 'Easy (RECOVERY)',
+                        total: '2500m',
+                        time: '~54 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (800m)',
+                                distance: '800m',
+                                details: [
+                                    '600m swim (60%)',
+                                    '200m kick'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m technique']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: ['1200m continuous @ 65% (recovery pace)']
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Technique Focus (RECOVERY)',
+                        total: '2600m',
+                        time: '~56 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (800m)',
+                                distance: '800m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick'
+                                ]
+                            },
+                            {
+                                name: 'Drills (400m)',
+                                distance: '400m',
+                                details: ['8×50m (perfect form drills)']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '10×100m @ 2:15 (easy base)',
+                                    '65-70% effort',
+                                    'Focus on technique not speed'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                11: {
+                    wed: {
+                        type: 'Long Endurance (PEAK)',
+                        total: '3000m',
+                        time: '~64 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '700m swim',
+                                    '200m kick',
+                                    '100m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '1500m continuous @ 70-72%',
+                                    'Peak endurance volume',
+                                    'Still controlled effort'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Quality Intervals (PEAK)',
+                        total: '3000m',
+                        time: '~64 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1500m)',
+                                distance: '1500m',
+                                details: [
+                                    '10×150m @ 2:57 (base × 1.5 - 3 sec faster)',
+                                    '72-75% effort (controlled quality)',
+                                    'Should feel challenging but sustainable'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                },
+                12: {
+                    wed: {
+                        type: 'Moderate (TAPER)',
+                        total: '2600m',
+                        time: '~56 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (800m)',
+                                distance: '800m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1300m)',
+                                distance: '1300m',
+                                details: [
+                                    '1200m @ 70%',
+                                    'Moderate effort, feeling strong'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    },
+                    fri: {
+                        type: 'Speed Touch (TAPER)',
+                        total: '2700m',
+                        time: '~58 min',
+                        sections: [
+                            {
+                                name: 'Warm-up (1000m)',
+                                distance: '1000m',
+                                details: [
+                                    '600m swim',
+                                    '200m kick',
+                                    '200m pull'
+                                ]
+                            },
+                            {
+                                name: 'Drills (300m)',
+                                distance: '300m',
+                                details: ['6×50m choice']
+                            },
+                            {
+                                name: 'Main Set (1200m)',
+                                distance: '1200m',
+                                details: [
+                                    '5×200m @ 4:00 (70%) - Controlled effort',
+                                    'Rest 2 min',
+                                    '4×50m @ 1:00 (80-85% - feel some speed!)'
+                                ]
+                            },
+                            {
+                                name: 'Cool-down (200m)',
+                                distance: '200m',
+                                details: ['200m easy']
+                            }
+                        ]
+                    }
+                }
+            },
+            strength: {
+                0: {
+                    name: 'Baseline',
+                    weekEq: 1,
+                    time: '~50 min',
+                    full: [
+                        { ex: 'Diamond Push-ups', reps: '10', notes: 'Hands forming diamond shape. If too easy: feet elevated on chair' },
+                        { ex: 'Bulgarian Split Squats (2×4kg)', reps: '10 each leg', notes: 'Holding dumbbells at sides' },
+                        { ex: 'Pull-ups', reps: '5', notes: 'Full dead hang to chin over bar' },
+                        { ex: 'Single-Leg Romanian Deadlift', reps: '8 each leg', notes: 'Hold 4kg dumbbell opposite hand' },
+                        { ex: 'Hanging Knee Raises', reps: '8', notes: 'From pull-up bar, controlled' },
+                        { ex: 'Plank', reps: '45 sec', notes: 'Maintenance only' }
+                    ],
+                    short: [
+                        { ex: 'Diamond Push-ups', reps: '8' },
+                        { ex: 'Bulgarian Split Squats', reps: '8 each' },
+                        { ex: 'Pull-ups', reps: '4' },
+                        { ex: 'Plank', reps: '30 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                1: {
+                    name: 'Progress',
+                    weekEq: 2,
+                    time: '~50 min',
+                    full: [
+                        { ex: 'Diamond Push-ups', reps: '10', notes: '' },
+                        { ex: 'Bulgarian Split Squats (2×4kg)', reps: '10 each leg', notes: '' },
+                        { ex: 'Pull-ups', reps: '5', notes: '' },
+                        { ex: 'Single-Leg Romanian Deadlift', reps: '8 each leg', notes: '' },
+                        { ex: 'Hanging Knee Raises', reps: '8', notes: '' },
+                        { ex: 'Plank', reps: '45 sec', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Diamond Push-ups', reps: '8' },
+                        { ex: 'Bulgarian Split Squats', reps: '8 each' },
+                        { ex: 'Pull-ups', reps: '4' },
+                        { ex: 'Plank', reps: '30 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                2: {
+                    name: 'Progress+',
+                    weekEq: 3,
+                    time: '~52 min',
+                    full: [
+                        { ex: 'Decline Push-ups', reps: '8', notes: 'Feet on chair, hands on floor' },
+                        { ex: 'Pistol Squat Negatives', reps: '5 each leg', notes: 'Lower slowly to chair/box, stand up with both legs. OR Goblet Squats (both 4kg): 12 reps' },
+                        { ex: 'Pull-ups', reps: '6', notes: 'One more rep than baseline' },
+                        { ex: 'Nordic Curls (assisted)', reps: '5', notes: 'Use resistance band or partner hold. OR Single-leg RDL (heavier): 10 each' },
+                        { ex: 'Hanging Leg Raises (straight legs)', reps: '6', notes: 'Progression from knee raises' },
+                        { ex: 'L-Sit Hold (bent knees)', reps: '15 sec', notes: 'On floor or parallettes' }
+                    ],
+                    short: [
+                        { ex: 'Decline Push-ups', reps: '6' },
+                        { ex: 'Goblet Squats', reps: '10' },
+                        { ex: 'Pull-ups', reps: '5' },
+                        { ex: 'Plank', reps: '40 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                3: {
+                    name: 'Progress++',
+                    weekEq: 4,
+                    time: '~52 min',
+                    full: [
+                        { ex: 'Decline Push-ups', reps: '8', notes: '' },
+                        { ex: 'Pistol Squat Negatives', reps: '5 each leg', notes: 'OR Goblet Squats: 12 reps' },
+                        { ex: 'Pull-ups', reps: '6', notes: '' },
+                        { ex: 'Nordic Curls (assisted)', reps: '5', notes: 'OR Single-leg RDL: 10 each' },
+                        { ex: 'Hanging Leg Raises (straight)', reps: '6', notes: '' },
+                        { ex: 'L-Sit Hold (bent)', reps: '15 sec', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Decline Push-ups', reps: '6' },
+                        { ex: 'Goblet Squats', reps: '10' },
+                        { ex: 'Pull-ups', reps: '5' },
+                        { ex: 'Plank', reps: '40 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                4: {
+                    name: 'Build',
+                    weekEq: 5,
+                    time: '~55 min',
+                    full: [
+                        { ex: 'Pseudo Planche Push-ups', reps: '6', notes: 'Hands by hips, lean forward, push up. OR Decline diamond push-ups: 8 reps' },
+                        { ex: 'Assisted Pistol Squats', reps: '6 each leg', notes: 'Light touch to chair for balance. OR Weighted Bulgarian splits (heavier): 12 reps' },
+                        { ex: 'Pull-ups', reps: '7', notes: 'Building volume' },
+                        { ex: 'Weighted Nordic Curls', reps: '6', notes: 'Hold 4kg dumbbell at chest. OR Single-leg RDL: 12 each (slow tempo)' },
+                        { ex: 'Toes-to-Bar', reps: '5', notes: 'From dead hang, touch bar with toes. OR Hanging leg raises: 10 reps' },
+                        { ex: 'L-Sit Hold', reps: '20 sec', notes: 'Legs straight if possible' }
+                    ],
+                    short: [
+                        { ex: 'Diamond Push-ups (decline)', reps: '6' },
+                        { ex: 'Goblet Squats', reps: '12' },
+                        { ex: 'Pull-ups', reps: '6' },
+                        { ex: 'Plank', reps: '45 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                5: {
+                    name: 'Build+',
+                    weekEq: 6,
+                    time: '~55 min',
+                    full: [
+                        { ex: 'Pseudo Planche Push-ups', reps: '6', notes: 'OR Decline diamond: 8' },
+                        { ex: 'Assisted Pistol Squats', reps: '6 each leg', notes: 'OR Weighted Bulgarian splits: 12' },
+                        { ex: 'Pull-ups', reps: '7', notes: '' },
+                        { ex: 'Weighted Nordic Curls', reps: '6', notes: 'OR Single-leg RDL: 12 each' },
+                        { ex: 'Toes-to-Bar', reps: '5', notes: 'OR Hanging leg raises: 10' },
+                        { ex: 'L-Sit Hold', reps: '20 sec', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Diamond Push-ups (decline)', reps: '6' },
+                        { ex: 'Goblet Squats', reps: '12' },
+                        { ex: 'Pull-ups', reps: '6' },
+                        { ex: 'Plank', reps: '45 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                6: {
+                    name: 'DELOAD - Active Recovery',
+                    weekEq: 7,
+                    time: '~40 min',
+                    full: [
+                        { ex: 'Regular Push-ups', reps: '15', notes: 'Your baseline, feels easy' },
+                        { ex: 'Bodyweight Squats', reps: '20', notes: '' },
+                        { ex: 'Pull-ups', reps: '3', notes: 'Sub-maximal' },
+                        { ex: 'Hanging Knee Raises', reps: '5', notes: '' },
+                        { ex: 'Plank', reps: '30 sec', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Regular Push-ups', reps: '12' },
+                        { ex: 'Bodyweight Squats', reps: '15' },
+                        { ex: 'Pull-ups', reps: '2' },
+                        { ex: 'Plank', reps: '20 sec' }
+                    ],
+                    rounds: 2,
+                    rest: '2 min',
+                    notes: '60% effort - Active recovery. Should feel refreshed after, not tired. Extra stretching (10 min)'
+                },
+                7: {
+                    name: 'Advanced Progress',
+                    weekEq: 8,
+                    time: '~55 min',
+                    full: [
+                        { ex: 'Archer Push-ups', reps: '5 each side', notes: 'One arm does more work, other assists. OR Pseudo planche: 8 reps' },
+                        { ex: 'Pistol Squats', reps: '5 each leg', notes: 'Full ROM, controlled. OR Shrimp squats: 6 each' },
+                        { ex: 'Weighted Pull-ups', reps: '5', notes: '4kg dumbbell between feet. OR Pull-ups: 8 bodyweight' },
+                        { ex: 'Single-Leg Deadlift (explosive)', reps: '8 each', notes: 'Fast concentric, slow eccentric' },
+                        { ex: 'Windshield Wipers', reps: '6', notes: 'Hanging from bar, legs together, rotate side to side. OR Toes-to-bar: 8' },
+                        { ex: 'Dragon Flag Negatives', reps: '3', notes: 'Lower slowly from top position' }
+                    ],
+                    short: [
+                        { ex: 'Pseudo Planche Push-ups', reps: '6' },
+                        { ex: 'Pistol Squats', reps: '4 each' },
+                        { ex: 'Pull-ups', reps: '7' },
+                        { ex: 'L-Sit', reps: '15 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                8: {
+                    name: 'Advanced Progress+',
+                    weekEq: 9,
+                    time: '~55 min',
+                    full: [
+                        { ex: 'Archer Push-ups', reps: '5 each side', notes: 'OR Pseudo planche: 8' },
+                        { ex: 'Pistol Squats', reps: '5 each leg', notes: 'OR Shrimp squats: 6 each' },
+                        { ex: 'Weighted Pull-ups', reps: '5', notes: '4kg OR Pull-ups: 8' },
+                        { ex: 'Single-Leg Deadlift (explosive)', reps: '8 each', notes: '' },
+                        { ex: 'Windshield Wipers', reps: '6', notes: 'OR Toes-to-bar: 8' },
+                        { ex: 'Dragon Flag Negatives', reps: '3', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Pseudo Planche Push-ups', reps: '6' },
+                        { ex: 'Pistol Squats', reps: '4 each' },
+                        { ex: 'Pull-ups', reps: '7' },
+                        { ex: 'L-Sit', reps: '15 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                9: {
+                    name: 'DELOAD - Recovery',
+                    weekEq: 10,
+                    time: '~40 min',
+                    full: [
+                        { ex: 'Regular Push-ups', reps: '15', notes: '' },
+                        { ex: 'Bodyweight Squats', reps: '20', notes: '' },
+                        { ex: 'Pull-ups', reps: '3', notes: '' },
+                        { ex: 'Hanging Knee Raises', reps: '5', notes: '' },
+                        { ex: 'Plank', reps: '30 sec', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Regular Push-ups', reps: '12' },
+                        { ex: 'Bodyweight Squats', reps: '15' },
+                        { ex: 'Pull-ups', reps: '2' },
+                        { ex: 'Plank', reps: '20 sec' }
+                    ],
+                    rounds: 2,
+                    rest: '2 min',
+                    notes: 'Same as Week 7 deload'
+                },
+                10: {
+                    name: 'Peak',
+                    weekEq: 11,
+                    time: '~58 min',
+                    full: [
+                        { ex: 'One-Arm Push-up Progression', reps: '3 each side', notes: 'Assisted with other hand on elevated surface. OR Archer push-ups: 8 each' },
+                        { ex: 'Pistol Squats (weighted)', reps: '6 each leg', notes: 'Hold 4kg dumbbell at chest. OR Advanced shrimp squats: 8 each' },
+                        { ex: 'Weighted Pull-ups', reps: '6', notes: '4kg dumbbell' },
+                        { ex: 'Explosive Pull-ups', reps: '3', notes: 'Pull fast, control down' },
+                        { ex: 'Nordic Curls (full)', reps: '5', notes: 'Minimal assistance' },
+                        { ex: 'Front Lever Tucks', reps: '10 sec hold', notes: 'From pull-up bar, knees to chest. OR Dragon flags: 5 reps' },
+                        { ex: 'Hollow Body Rocks', reps: '15', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Archer Push-ups', reps: '6 each' },
+                        { ex: 'Pistol Squats', reps: '5 each' },
+                        { ex: 'Weighted Pull-ups', reps: '5' },
+                        { ex: 'Front Lever Tuck', reps: '8 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                },
+                11: {
+                    name: 'Peak+',
+                    weekEq: 12,
+                    time: '~58 min',
+                    full: [
+                        { ex: 'One-Arm Push-up Progression', reps: '3 each side', notes: 'OR Archer: 8 each' },
+                        { ex: 'Pistol Squats (weighted)', reps: '6 each leg', notes: '4kg OR Advanced shrimp: 8' },
+                        { ex: 'Weighted Pull-ups', reps: '6', notes: '4kg' },
+                        { ex: 'Explosive Pull-ups', reps: '3', notes: '' },
+                        { ex: 'Nordic Curls (full)', reps: '5', notes: '' },
+                        { ex: 'Front Lever Tucks', reps: '10 sec', notes: 'OR Dragon flags: 5' },
+                        { ex: 'Hollow Body Rocks', reps: '15', notes: '' }
+                    ],
+                    short: [
+                        { ex: 'Archer Push-ups', reps: '6 each' },
+                        { ex: 'Pistol Squats', reps: '5 each' },
+                        { ex: 'Weighted Pull-ups', reps: '5' },
+                        { ex: 'Front Lever Tuck', reps: '8 sec' }
+                    ],
+                    rounds: 3,
+                    rest: '90 sec'
+                }
+            }
+        };
+
+        class WorkoutApp {
+            constructor() {
+                this.data = this.loadData();
+                this.render();
+            }
+
+            loadData() {
+                const stored = localStorage.getItem('workoutData');
+                if (stored) {
+                    return JSON.parse(stored);
+                }
+                
+                const defaultData = {
+                    setupComplete: false,
+                    programStart: null,
+                    stats: {},
+                    sessions: [],
+                    currentStrengthLevel: 0,
+                    strengthSkipCounter: 0,
+                    lastStrengthWeek: null,
+                    weeklySchedules: {},
+                    currentSwimProgram: 'A',
+                    swimProgramWeek: 1
+                };
+                return defaultData;
+            }
+
+            saveData() {
+                localStorage.setItem('workoutData', JSON.stringify(this.data));
+            }
+
+            getCurrentWeekNumber() {
+                if (!this.data.programStart) return 1;
+                
+                const now = new Date();
+                const monday = new Date(now);
+                monday.setDate(now.getDate() - (now.getDay() || 7) + 1);
+                monday.setHours(0, 0, 0, 0);
+
+                const startMonday = new Date(this.data.programStart);
+                const diffTime = monday.getTime() - startMonday.getTime();
+                const diffWeeks = Math.floor(diffTime / (7 * 24 * 60 * 60 * 1000));
+                
+                return Math.min(Math.max(1 + diffWeeks, 1), 12);
+            }
+
+            getSwimProgramForWeek(calendarWeek) {
+                // Direct week mapping for Week 1-12
+                return calendarWeek;
+            }
+
+            getActualSwimWeek() {
+                // Check last 2 weeks (4 sessions) for regression
+                const currentWeek = this.getCurrentWeekNumber();
+                const lastTwoWeeksSessions = this.data.sessions.filter(s => 
+                    s.type === 'swim' && 
+                    s.week >= currentWeek - 2 && 
+                    s.week < currentWeek
+                );
+                
+                const completedCount = lastTwoWeeksSessions.filter(s => s.completed).length;
+                
+                // If less than 2 completed out of last 4 → don't advance program
+                if (lastTwoWeeksSessions.length >= 4 && completedCount < 2) {
+                    // Stay at current program week
+                    return this.data.swimProgramWeek;
+                }
+                
+                // Advance program normally
+                if (completedCount >= 2 || lastTwoWeeksSessions.length < 4) {
+                    this.data.swimProgramWeek = currentWeek;
+                    this.saveData();
+                }
+                
+                return Math.min(this.data.swimProgramWeek || 1, 12);
+            }
+
+            getWeekDates(offset = 0) {
+                if (!this.data.programStart) {
+                    const today = new Date();
+                    const monday = new Date(today);
+                    monday.setDate(today.getDate() - (today.getDay() || 7) + 1);
+                    monday.setDate(monday.getDate() + (offset * 7));
+                    
+                    const dates = [];
+                    for (let i = 0; i < 7; i++) {
+                        const day = new Date(monday);
+                        day.setDate(monday.getDate() + i);
+                        dates.push(day);
+                    }
+                    return dates;
+                }
+
+                const startMonday = new Date(this.data.programStart);
+                const currentWeek = this.getCurrentWeekNumber();
+                const targetMonday = new Date(startMonday);
+                targetMonday.setDate(startMonday.getDate() + ((currentWeek - 1 + offset) * 7));
+
+                const dates = [];
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(targetMonday);
+                    day.setDate(targetMonday.getDate() + i);
+                    dates.push(day);
+                }
+                return dates;
+            }
+
+            formatDateRange(dates) {
+                const start = dates[0];
+                const end = dates[6];
+                const options = { month: 'short', day: 'numeric' };
+                return `${start.toLocaleDateString('en-US', options)} - ${end.toLocaleDateString('en-US', options)}`;
+            }
+
+            render() {
+                const app = document.getElementById('app');
+                if (!this.data.setupComplete) {
+                    app.innerHTML = this.renderSetup();
+                } else {
+                    app.innerHTML = this.renderMain();
+                }
+                this.attachEventListeners();
+            }
+
+            renderSetup() {
+                return `
+                    <div class="container">
+                        <div class="card setup-card">
+                            <h2>🏊 Welcome to Your 12-Week Program!</h2>
+                            <p>Let's set up your baseline stats to track progress</p>
+                            
+                            <div class="form-group">
+                                <label>Current Weight (kg)</label>
+                                <input type="number" id="weight" step="0.1" placeholder="e.g., 82">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>50m Freestyle PR (seconds)</label>
+                                <input type="number" id="freestyle50m" step="0.1" placeholder="e.g., 38">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Max Pull-ups (reps)</label>
+                                <input type="number" id="pullUps" placeholder="e.g., 5">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Max Push-ups (reps)</label>
+                                <input type="number" id="pushUps" placeholder="e.g., 15">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Plank Hold (seconds)</label>
+                                <input type="number" id="plank" placeholder="e.g., 60">
+                            </div>
+                            
+                            <button class="btn btn-gold" id="startBtn">
+                                <span>🚀</span>
+                                <span>Start Week 1</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderMain() {
+                const week = this.getCurrentWeekNumber();
+                const dates = this.getWeekDates();
+                const dateRange = this.formatDateRange(dates);
+                const strengthLevel = this.data.currentStrengthLevel;
+                const strengthWeek = PROGRAMS.strength[strengthLevel]?.weekEq || 1;
+                const weeksBehind = week - strengthWeek;
+
+                const actualSwimWeek = this.getActualSwimWeek();
+                const swimBehind = week - actualSwimWeek;
+
+                const hasSchedule = this.data.weeklySchedules && this.data.weeklySchedules[week];
+
+                return `
+                    <div class="container">
+                        <div class="header">
+                            <h1><span>🏊</span> WORKOUT SCHEDULER V3.2</h1>
+                            <div class="week-info">Week ${week} of 12 • ${dateRange}</div>
+                            <div class="sync-status">
+                                ${swimBehind === 0 && weeksBehind === 0 ? 
+                                    '✓ All programs synced!' : ''}
+                                ${swimBehind > 0 ? 
+                                    `⚠️ Swimming: Repeating Week ${actualSwimWeek} program (skips)<br>` : 
+                                    swimBehind === 0 ? `Swimming: Week ${week} ✓<br>` : ''}
+                                ${weeksBehind > 0 ? 
+                                    `⚠️ Strength ${weeksBehind} week${weeksBehind > 1 ? 's' : ''} behind` : 
+                                    `Strength: Level ${strengthLevel} (Week ${strengthWeek}) ✓`}
+                            </div>
+                        </div>
+
+                        ${this.renderNutritionCard()}
+                        ${this.renderSleepCard()}
+                        ${!hasSchedule ? this.renderPlanPrompt(week) : ''}
+                        ${hasSchedule ? this.renderWeeklyOverview(week, dates) : ''}
+                        ${this.renderQuickActions(hasSchedule)}
+                        ${this.renderProgressCard()}
+                    </div>
+
+                    ${this.renderWorkoutModal()}
+                    ${this.renderLogModal()}
+                    ${this.renderPlanModal()}
+                `;
+            }
+
+            renderNutritionCard() {
+                return `
+                    <div class="card">
+                        <h2>🍽️ Nutrition Timing</h2>
+                        <div class="form-group">
+                            <label>Workout Time (HH:MM)</label>
+                            <input type="time" id="nutritionTime" value="18:00" style="padding: 0.75rem; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 1rem;">
+                            <button class="btn btn-primary" id="calcNutritionBtn" style="margin-top: 0.5rem;">
+                                <span>📊</span>
+                                <span>Calculate Meal Timing</span>
+                            </button>
+                        </div>
+                        <div id="nutritionResults" style="margin-top: 1rem;"></div>
+                    </div>
+                `;
+            }
+
+            renderSleepCard() {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const tomorrowDay = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][tomorrow.getDay()];
+                
+                const week = this.getCurrentWeekNumber();
+                const schedule = this.data.weeklySchedules[week] || { swim1: 'wednesday', swim2: 'friday', strength: 'tuesday' };
+                
+                let tomorrowWorkout = null;
+                if (schedule.swim1 === tomorrowDay) tomorrowWorkout = 'Swim Session';
+                else if (schedule.swim2 === tomorrowDay) tomorrowWorkout = 'Swim Session';
+                else if (schedule.strength === tomorrowDay) tomorrowWorkout = 'Strength Training';
+                
+                const bedtime = tomorrowWorkout ? '22:30-23:00' : '23:00-23:30';
+                const wake = tomorrowWorkout ? '6:30-7:00' : '7:00-7:30';
+                const reason = tomorrowWorkout ? 'workout day - need good rest' : 'rest day - normal schedule';
+                
+                return `
+                    <div class="card">
+                        <h2>😴 Sleep Guidance</h2>
+                        <div class="alert ${tomorrowWorkout ? 'alert-warning' : 'alert-info'}">
+                            <span>${tomorrowWorkout ? '⚠️' : 'ℹ️'}</span>
+                            <div>
+                                <strong>Tomorrow: ${tomorrowWorkout || 'Rest Day'}</strong><br>
+                                📍 Bedtime: ${bedtime} (${reason})<br>
+                                📍 Wake: ${wake}<br>
+                                💤 Target: 7-8 hours sleep
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderProgressCard() {
+                const totalSessions = this.data.sessions.length;
+                const completedSessions = this.data.sessions.filter(s => s.completed).length;
+                const skippedSessions = this.data.sessions.filter(s => s.skipped).length;
+                const completionRate = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
+                
+                const swimSessions = this.data.sessions.filter(s => s.type === 'swim');
+                const strengthSessions = this.data.sessions.filter(s => s.type === 'strength');
+                
+                const swimCompleted = swimSessions.filter(s => s.completed).length;
+                const strengthCompleted = strengthSessions.filter(s => s.completed).length;
+                
+                return `
+                    <div class="card">
+                        <h2>📊 Progress Stats</h2>
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-value">${completionRate}%</div>
+                                <div class="stat-label">Completion Rate</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">${completedSessions}</div>
+                                <div class="stat-label">Completed</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value">${skippedSessions}</div>
+                                <div class="stat-label">Skipped</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <div style="margin-bottom: 0.5rem;">
+                                <strong>🏊 Swimming:</strong> ${swimCompleted} sessions completed
+                            </div>
+                            <div style="margin-bottom: 0.5rem;">
+                                <strong>🏋️ Strength:</strong> ${strengthCompleted} sessions completed (Level ${this.data.currentStrengthLevel})
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderPlanPrompt(week) {
+                const nextDates = this.getWeekDates(0);
+                const dateRange = this.formatDateRange(nextDates);
+                
+                return `
+                    <div class="card">
+                        <h2>📅 Plan Week ${week}</h2>
+                        <div class="alert alert-info">
+                            <span>📌</span>
+                            <span>Week ${week} starts tomorrow (${dateRange}). Plan your workout schedule now!</span>
+                        </div>
+                        <button class="btn btn-gold" id="planWeekBtn">
+                            <span>📅</span>
+                            <span>Plan Week ${week} Schedule</span>
+                        </button>
+                    </div>
+                `;
+            }
+
+            renderWeeklyOverview(week, dates) {
+                const schedule = this.data.weeklySchedules[week];
+                const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                
+                let html = '<div class="card"><h2>📅 This Week</h2>';
+                
+                days.forEach((day, index) => {
+                    const date = dates[index];
+                    const dateStr = date.toISOString().split('T')[0];
+                    const daySession = this.data.sessions.find(s => 
+                        s.week === week && 
+                        s.day === day
+                    );
+                    
+                    const workouts = [];
+                    if (schedule.swim1 === day) workouts.push({ type: 'swim', session: '1' });
+                    if (schedule.swim2 === day) workouts.push({ type: 'swim', session: '2' });
+                    if (schedule.strength === day) workouts.push({ type: 'strength', session: '1' });
+                    
+                    const isCompleted = daySession?.completed;
+                    const isSkipped = daySession?.skipped;
+                    
+                    html += `
+                        <div class="day-item ${isCompleted ? 'completed' : ''} ${isSkipped ? 'skipped' : ''}" 
+                             data-day="${day}" data-week="${week}">
+                            <div style="flex: 1;">
+                                <div class="day-label">${day.charAt(0).toUpperCase() + day.slice(1)}</div>
+                                <div class="day-date">${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                                ${workouts.map(w => 
+                                    `<span class="workout-badge ${w.type}" data-type="${w.type}" data-session="${w.session}">
+                                        ${w.type === 'swim' ? '🏊' : '🏋️'} ${w.type === 'swim' ? 'Swim ' + w.session : 'Strength'}
+                                    </span>`
+                                ).join('')}
+                            </div>
+                            <div class="day-status">
+                                ${isCompleted ? '✓' : isSkipped ? '⚠️' : workouts.length > 0 ? '📝' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                return html;
+            }
+
+            renderQuickActions(hasSchedule) {
+                const week = this.getCurrentWeekNumber();
+                return `
+                    <div class="card">
+                        <h2>⚡ Quick Actions</h2>
+                        <div class="quick-actions">
+                            ${hasSchedule ? `
+                                <button class="btn btn-primary" id="logSessionBtn">
+                                    <span>📝</span>
+                                    <span>Log Session</span>
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-outline" id="exportBtn">
+                                <span>💾</span>
+                                <span>Export Data</span>
+                            </button>
+                            <button class="btn btn-outline" id="importBtn">
+                                <span>📥</span>
+                                <span>Import Data</span>
+                            </button>
+                            <input type="file" id="importFile" accept=".json">
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderWorkoutModal() {
+                return `
+                    <div class="modal" id="workoutModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 id="workoutModalTitle">Workout Details</h3>
+                                <button class="modal-close" id="closeWorkoutModal">×</button>
+                            </div>
+                            <div class="modal-body" id="workoutModalBody">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderLogModal() {
+                return `
+                    <div class="modal" id="logModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Log Session</h3>
+                                <button class="modal-close" id="closeLogModal">×</button>
+                            </div>
+                            <div class="modal-body" id="logModalBody">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderPlanModal() {
+                const week = this.getCurrentWeekNumber();
+                const currentSchedule = this.data.weeklySchedules[week] || { swim1: 'wednesday', swim2: 'friday', strength: 'tuesday' };
+                
+                return `
+                    <div class="modal" id="planModal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Plan Week ${week} Schedule</h3>
+                                <button class="modal-close" id="closePlanModal">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="planForm">
+                                    <div class="planning-section">
+                                        <h3>🏊 Swim Session 1</h3>
+                                        <div class="radio-group">
+                                            ${['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'skip'].map(day => `
+                                                <div class="radio-item">
+                                                    <input type="radio" name="swim1" value="${day}" id="swim1-${day}" ${currentSchedule.swim1 === day ? 'checked' : ''}>
+                                                    <label for="swim1-${day}">${day === 'skip' ? 'Skip' : day.substring(0, 3).toUpperCase()}</label>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="planning-section">
+                                        <h3>🏊 Swim Session 2</h3>
+                                        <div class="radio-group">
+                                            ${['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'skip'].map(day => `
+                                                <div class="radio-item">
+                                                    <input type="radio" name="swim2" value="${day}" id="swim2-${day}" ${currentSchedule.swim2 === day ? 'checked' : ''}>
+                                                    <label for="swim2-${day}">${day === 'skip' ? 'Skip' : day.substring(0, 3).toUpperCase()}</label>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="planning-section">
+                                        <h3>🏋️ Strength Session</h3>
+                                        <div class="radio-group">
+                                            ${['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'skip'].map(day => `
+                                                <div class="radio-item">
+                                                    <input type="radio" name="strength" value="${day}" id="strength-${day}" ${currentSchedule.strength === day ? 'checked' : ''}>
+                                                    <label for="strength-${day}">${day === 'skip' ? 'Skip' : day.substring(0, 3).toUpperCase()}</label>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-gold" style="margin-top: 1rem;">
+                                        <span>✅</span>
+                                        <span>Confirm Schedule</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            attachEventListeners() {
+                const startBtn = document.getElementById('startBtn');
+                if (startBtn) {
+                    startBtn.addEventListener('click', () => this.handleSetup());
+                }
+
+                const planWeekBtn = document.getElementById('planWeekBtn');
+                if (planWeekBtn) {
+                    planWeekBtn.addEventListener('click', () => this.openModal('planModal'));
+                }
+
+                const logSessionBtn = document.getElementById('logSessionBtn');
+                if (logSessionBtn) {
+                    logSessionBtn.addEventListener('click', () => this.openLogModal());
+                }
+
+                const closeWorkoutModal = document.getElementById('closeWorkoutModal');
+                if (closeWorkoutModal) {
+                    closeWorkoutModal.addEventListener('click', () => this.closeModal('workoutModal'));
+                }
+
+                const closeLogModal = document.getElementById('closeLogModal');
+                if (closeLogModal) {
+                    closeLogModal.addEventListener('click', () => this.closeModal('logModal'));
+                }
+
+                const closePlanModal = document.getElementById('closePlanModal');
+                if (closePlanModal) {
+                    closePlanModal.addEventListener('click', () => this.closeModal('planModal'));
+                }
+
+                const planForm = document.getElementById('planForm');
+                if (planForm) {
+                    planForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        this.handlePlanSubmit();
+                    });
+                }
+
+                const workoutBadges = document.querySelectorAll('.workout-badge');
+                workoutBadges.forEach(badge => {
+                    badge.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const type = badge.dataset.type;
+                        const session = badge.dataset.session;
+                        const dayItem = badge.closest('.day-item');
+                        const day = dayItem.dataset.day;
+                        const week = parseInt(dayItem.dataset.week);
+                        this.showWorkoutDetails(day, type, week, session);
+                    });
+                });
+
+                const exportBtn = document.getElementById('exportBtn');
+                if (exportBtn) {
+                    exportBtn.addEventListener('click', () => this.exportData());
+                }
+
+                const importBtn = document.getElementById('importBtn');
+                if (importBtn) {
+                    importBtn.addEventListener('click', () => {
+                        document.getElementById('importFile').click();
+                    });
+                }
+
+                const importFile = document.getElementById('importFile');
+                if (importFile) {
+                    importFile.addEventListener('change', (e) => this.importData(e));
+                }
+
+                const nutritionBtn = document.getElementById('calcNutritionBtn');
+                if (nutritionBtn) {
+                    nutritionBtn.addEventListener('click', () => this.calculateNutrition());
+                }
+            }
+
+            handleSetup() {
+                const weight = document.getElementById('weight').value;
+                const freestyle50m = document.getElementById('freestyle50m').value;
+                const pullUps = document.getElementById('pullUps').value;
+                const pushUps = document.getElementById('pushUps').value;
+                const plank = document.getElementById('plank').value;
+
+                if (!weight || !freestyle50m || !pullUps || !pushUps || !plank) {
+                    alert('Please fill in all fields!');
+                    return;
+                }
+
+                const today = new Date();
+                const monday = new Date(today);
+                monday.setDate(today.getDate() - (today.getDay() || 7) + 1);
+                monday.setHours(0, 0, 0, 0);
+
+                this.data.setupComplete = true;
+                this.data.programStart = monday.toISOString();
+                this.data.stats = {
+                    weight: parseFloat(weight),
+                    freestyle50m: parseFloat(freestyle50m),
+                    pullUps: parseInt(pullUps),
+                    pushUps: parseInt(pushUps),
+                    plank: parseInt(plank)
+                };
+                this.data.currentStrengthLevel = 0;
+                this.data.currentSwimProgram = 'A';
+                this.data.swimProgramWeek = 1;
+                
+                this.saveData();
+                this.render();
+            }
+
+            handlePlanSubmit() {
+                const form = document.getElementById('planForm');
+                const formData = new FormData(form);
+                const week = this.getCurrentWeekNumber();
+                
+                const schedule = {
+                    swim1: formData.get('swim1'),
+                    swim2: formData.get('swim2'),
+                    strength: formData.get('strength')
+                };
+
+                // Validate no conflicts
+                const days = [schedule.swim1, schedule.swim2, schedule.strength].filter(d => d !== 'skip');
+                const uniqueDays = [...new Set(days)];
+                
+                if (days.length !== uniqueDays.length) {
+                    alert('Cannot schedule multiple workouts on the same day!');
+                    return;
+                }
+
+                this.data.weeklySchedules[week] = schedule;
+                
+                // Create session entries for non-skipped workouts
+                if (schedule.swim1 !== 'skip') {
+                    this.createSession(week, schedule.swim1, 'swim', '1');
+                }
+                if (schedule.swim2 !== 'skip') {
+                    this.createSession(week, schedule.swim2, 'swim', '2');
+                }
+                if (schedule.strength !== 'skip') {
+                    this.createSession(week, schedule.strength, 'strength', '1');
+                }
+                
+                this.saveData();
+                this.closeModal('planModal');
+                this.render();
+            }
+
+            createSession(week, day, type, session) {
+                const existing = this.data.sessions.find(s => 
+                    s.week === week && s.day === day && s.type === type
+                );
+                
+                if (!existing) {
+                    this.data.sessions.push({
+                        week,
+                        day,
+                        type,
+                        session,
+                        completed: false,
+                        skipped: false,
+                        date: null,
+                        notes: ''
+                    });
+                }
+            }
+
+            showWorkoutDetails(day, type, week, session) {
+                const modal = document.getElementById('workoutModal');
+                const title = document.getElementById('workoutModalTitle');
+                const body = document.getElementById('workoutModalBody');
+
+                if (type === 'swim') {
+                    const actualWeek = this.getActualSwimWeek();
+                    const dayKey = session === '1' ? 'wed' : 'fri';
+                    const workout = PROGRAMS.swimming[actualWeek]?.[dayKey];
+                    
+                    if (!workout) {
+                        body.innerHTML = '<div class="alert alert-warning">Program not available</div>';
+                        this.openModal('workoutModal');
+                        return;
+                    }
+
+                    const isRepeating = actualWeek !== week;
+                    title.textContent = `Week ${week} - Swim Session ${session}${isRepeating ? ` (Week ${actualWeek} program)` : ''}`;
+                    
+                    let html = `
+                        ${isRepeating ? `<div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span>Repeating Week ${actualWeek} program due to recent skips</span>
+                        </div>` : ''}
+                        <div class="alert alert-info">
+                            <span>📏</span>
+                            <span><strong>${workout.total}</strong> • ${workout.type} • ${workout.time}</span>
+                        </div>
+                    `;
+                    
+                    workout.sections.forEach(section => {
+                        html += `
+                            <div class="workout-section">
+                                <h3>${section.name} - ${section.distance}</h3>
+                                ${section.details.map(d => `<div class="workout-detail">• ${d}</div>`).join('')}
+                            </div>
+                        `;
+                    });
+                    
+                    body.innerHTML = html;
+                } else {
+                    const strengthLevel = this.data.currentStrengthLevel;
+                    const program = PROGRAMS.strength[strengthLevel];
+                    
+                    if (!program) {
+                        body.innerHTML = '<div class="alert alert-warning">Program not available</div>';
+                        this.openModal('workoutModal');
+                        return;
+                    }
+
+                    title.textContent = `Week ${week} - Strength Level ${strengthLevel}`;
+                    
+                    let html = `
+                        <div class="alert alert-info">
+                            <span>💪</span>
+                            <span><strong>${program.name}</strong> • ${program.time} • ${program.rounds} rounds • ${program.rest} rest</span>
+                        </div>
+                    `;
+                    
+                    html += '<div class="workout-section"><h3>Full Workout</h3>';
+                    program.full.forEach(ex => {
+                        html += `<div class="workout-detail">• <strong>${ex.ex}</strong>: ${ex.reps}${ex.notes ? ` <span style="color: #6c757d;">(${ex.notes})</span>` : ''}</div>`;
+                    });
+                    html += '</div>';
+                    
+                    if (program.notes) {
+                        html += `<div class="alert alert-warning"><span>💡</span><span>${program.notes}</span></div>`;
+                    }
+                    
+                    body.innerHTML = html;
+                }
+
+                this.openModal('workoutModal');
+            }
+
+            openLogModal() {
+                const week = this.getCurrentWeekNumber();
+                const schedule = this.data.weeklySchedules[week];
+                const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                
+                const sessions = [];
+                days.forEach(day => {
+                    if (schedule.swim1 === day) sessions.push({ day, type: 'swim', session: '1', label: 'Swim 1' });
+                    if (schedule.swim2 === day) sessions.push({ day, type: 'swim', session: '2', label: 'Swim 2' });
+                    if (schedule.strength === day) sessions.push({ day, type: 'strength', session: '1', label: 'Strength' });
+                });
+
+                const body = document.getElementById('logModalBody');
+                let html = '<div class="form-group"><label>Select Session</label><select id="sessionSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 1rem;">';
+                
+                sessions.forEach(s => {
+                    const dayLabel = s.day.charAt(0).toUpperCase() + s.day.slice(1);
+                    const existing = this.data.sessions.find(sess => 
+                        sess.week === week && sess.day === s.day && sess.type === s.type
+                    );
+                    const status = existing?.completed ? '✓' : existing?.skipped ? '⚠️' : '';
+                    html += `<option value="${s.day}-${s.type}-${s.session}">${dayLabel} - ${s.label} ${status}</option>`;
+                });
+                
+                html += '</select></div>';
+                html += `
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="radio-group">
+                            <div class="radio-item">
+                                <input type="radio" name="status" value="completed" id="status-completed" checked>
+                                <label for="status-completed">✅ Completed</label>
+                            </div>
+                            <div class="radio-item">
+                                <input type="radio" name="status" value="skipped" id="status-skipped">
+                                <label for="status-skipped">⚠️ Skipped</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                html += `
+                    <div id="gymCheckboxes" style="display: none;">
+                        <div class="form-group">
+                            <label>Gym Substitution - Check ALL areas covered:</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym-legs" value="legs">
+                                    <label for="gym-legs">Legs</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym-upper-push" value="upperPush">
+                                    <label for="gym-upper-push">Upper Push</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym-upper-pull" value="upperPull">
+                                    <label for="gym-upper-pull">Upper Pull</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym-core" value="core">
+                                    <label for="gym-core">Core</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gym-cardio" value="cardio">
+                                    <label for="gym-cardio">Cardio-only (doesn't count as completion)</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                html += '<button class="btn btn-gold" id="saveLogBtn" style="width: 100%; margin-top: 1rem;"><span>💾</span><span>Save</span></button>';
+                
+                body.innerHTML = html;
+
+                const sessionSelect = document.getElementById('sessionSelect');
+                const statusRadios = document.querySelectorAll('input[name="status"]');
+                const gymCheckboxes = document.getElementById('gymCheckboxes');
+
+                const updateGymVisibility = () => {
+                    const [day, type, session] = sessionSelect.value.split('-');
+                    const statusCompleted = document.getElementById('status-completed').checked;
+                    gymCheckboxes.style.display = (type === 'strength' && statusCompleted) ? 'block' : 'none';
+                };
+
+                sessionSelect.addEventListener('change', updateGymVisibility);
+                statusRadios.forEach(radio => radio.addEventListener('change', updateGymVisibility));
+
+                const saveLogBtn = document.getElementById('saveLogBtn');
+                saveLogBtn.addEventListener('click', () => this.saveLog());
+
+                this.openModal('logModal');
+            }
+
+            saveLog() {
+                const week = this.getCurrentWeekNumber();
+                const sessionSelect = document.getElementById('sessionSelect');
+                const [day, type, session] = sessionSelect.value.split('-');
+                const statusCompleted = document.getElementById('status-completed').checked;
+                
+                let isValidCompletion = statusCompleted;
+                let gymAreas = [];
+
+                if (type === 'strength' && statusCompleted) {
+                    const legs = document.getElementById('gym-legs').checked;
+                    const upperPush = document.getElementById('gym-upper-push').checked;
+                    const upperPull = document.getElementById('gym-upper-pull').checked;
+                    const core = document.getElementById('gym-core').checked;
+                    const cardioOnly = document.getElementById('gym-cardio').checked;
+
+                    gymAreas = [legs, upperPush, upperPull, core, cardioOnly];
+
+                    if (cardioOnly && (!legs && !upperPush && !upperPull && !core)) {
+                        isValidCompletion = false;
+                    } else if (!legs || !upperPush || !upperPull || !core) {
+                        isValidCompletion = false;
+                    }
+                }
+
+                const sessionIndex = this.data.sessions.findIndex(s => 
+                    s.week === week && s.day === day && s.type === type
+                );
+
+                if (sessionIndex !== -1) {
+                    this.data.sessions[sessionIndex].completed = isValidCompletion;
+                    this.data.sessions[sessionIndex].skipped = !statusCompleted;
+                    this.data.sessions[sessionIndex].date = new Date().toISOString();
+                    if (type === 'strength') {
+                        this.data.sessions[sessionIndex].gymSubstitution = gymAreas;
+                    }
+                }
+
+                // Update strength progression
+                if (type === 'strength') {
+                    if (isValidCompletion) {
+                        this.data.strengthSkipCounter = 0;
+                        this.data.lastStrengthWeek = week;
+                        
+                        // Check if should advance level (every 2 weeks)
+                        const completedAtLevel = this.data.sessions.filter(s => 
+                            s.type === 'strength' && 
+                            s.completed && 
+                            s.week >= week - 1
+                        ).length;
+                        
+                        if (completedAtLevel >= 2 && this.data.currentStrengthLevel < 11) {
+                            this.data.currentStrengthLevel++;
+                        }
+                    } else if (!statusCompleted) {
+                        if (this.data.lastStrengthWeek && (week - this.data.lastStrengthWeek) >= 3) {
+                            if (this.data.currentStrengthLevel > 0) {
+                                this.data.currentStrengthLevel--;
+                            }
+                        }
+                    }
+                }
+
+                this.saveData();
+                this.closeModal('logModal');
+                this.render();
+            }
+
+            calculateNutrition() {
+                const timeInput = document.getElementById('nutritionTime').value;
+                if (!timeInput) return;
+
+                const [hours, minutes] = timeInput.split(':').map(Number);
+                const workoutTime = hours * 60 + minutes;
+
+                const formatTime = (mins) => {
+                    let h = Math.floor(mins / 60) % 24;
+                    if (h < 0) h += 24;
+                    const m = mins % 60;
+                    return `${h.toString().padStart(2, '0')}:${Math.abs(m).toString().padStart(2, '0')}`;
+                };
+
+                let html = '';
+                
+                if (hours >= 6 && hours < 11) {
+                    const wake = workoutTime - 60;
+                    const lightBreakfast = workoutTime - 45;
+                    const postWorkout = workoutTime + 30;
+                    
+                    html = `
+                        <div class="workout-section">
+                            <h3>Morning Workout Schedule (${timeInput})</h3>
+                            <div class="workout-detail">📍 ${formatTime(wake)} - Wake up, hydrate (water)</div>
+                            <div class="workout-detail">📍 ${formatTime(lightBreakfast)} - Light breakfast
+                                <br>&nbsp;&nbsp;&nbsp;• Banana + coffee, OR
+                                <br>&nbsp;&nbsp;&nbsp;• Toast with honey
+                                <br>&nbsp;&nbsp;&nbsp;• Keep it light!
+                            </div>
+                            <div class="workout-detail">📍 ${timeInput} - WORKOUT 🏊/🏋️</div>
+                            <div class="workout-detail">📍 ${formatTime(postWorkout)} - Post-workout meal
+                                <br>&nbsp;&nbsp;&nbsp;• Protein + carbs
+                                <br>&nbsp;&nbsp;&nbsp;• Full breakfast
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span><strong>Morning tip:</strong> Don't workout on completely empty stomach</span>
+                        </div>
+                    `;
+                } else if (hours >= 11 && hours < 15) {
+                    const breakfast = workoutTime - 180;
+                    const snack = workoutTime - 90;
+                    const postWorkout = workoutTime + 60;
+                    
+                    html = `
+                        <div class="workout-section">
+                            <h3>Midday Workout Schedule (${timeInput})</h3>
+                            <div class="workout-detail">📍 ${formatTime(breakfast)} - Breakfast (normal meal)</div>
+                            <div class="workout-detail">📍 ${formatTime(snack)} - Mid-morning snack
+                                <br>&nbsp;&nbsp;&nbsp;• Fruit + energy bar
+                                <br>&nbsp;&nbsp;&nbsp;• Greek yogurt
+                            </div>
+                            <div class="workout-detail">📍 ${timeInput} - WORKOUT 🏊/🏋️</div>
+                            <div class="workout-detail">📍 ${formatTime(postWorkout)} - Post-workout lunch
+                                <br>&nbsp;&nbsp;&nbsp;• Protein + carbs
+                                <br>&nbsp;&nbsp;&nbsp;• Full meal
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span><strong>Don't:</strong> Heavy breakfast right before workout</span>
+                        </div>
+                    `;
+                } else if (hours >= 15 && hours < 18) {
+                    const lunch = workoutTime - 180;
+                    const snack = workoutTime - 90;
+                    const postWorkout = workoutTime + 90;
+                    
+                    html = `
+                        <div class="workout-section">
+                            <h3>Afternoon Workout Schedule (${timeInput})</h3>
+                            <div class="workout-detail">📍 ${formatTime(lunch)} - Lunch (moderate, not heavy)</div>
+                            <div class="workout-detail">📍 ${formatTime(snack)} - Afternoon snack
+                                <br>&nbsp;&nbsp;&nbsp;• Banana + coffee
+                                <br>&nbsp;&nbsp;&nbsp;• Energy bar
+                            </div>
+                            <div class="workout-detail">📍 ${timeInput} - WORKOUT 🏊/🏋️</div>
+                            <div class="workout-detail">📍 ${formatTime(postWorkout)} - Post-workout dinner
+                                <br>&nbsp;&nbsp;&nbsp;• Protein + carbs
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span><strong>Don't:</strong> Heavy lunch 2 hours before workout</span>
+                        </div>
+                    `;
+                } else {
+                    const lunch = workoutTime - 240;
+                    const espresso = workoutTime - 180;
+                    const snackStart = workoutTime - 120;
+                    const snackEnd = workoutTime - 90;
+                    const postWorkout = workoutTime + 90;
+                    
+                    html = `
+                        <div class="workout-section">
+                            <h3>Evening Workout Schedule (${timeInput})</h3>
+                            <div class="workout-detail">📍 ${formatTime(lunch)} - Lunch (normal meal)</div>
+                            <div class="workout-detail">📍 ${formatTime(espresso)} - Espresso ☕</div>
+                            <div class="workout-detail">📍 ${formatTime(snackStart)}-${formatTime(snackEnd)} - Pre-workout snack
+                                <br>&nbsp;&nbsp;&nbsp;• Banana + energy bar, OR
+                                <br>&nbsp;&nbsp;&nbsp;• Toast with honey
+                            </div>
+                            <div class="workout-detail">📍 ${timeInput} - WORKOUT 🏊/🏋️</div>
+                            <div class="workout-detail">📍 ${formatTime(postWorkout)} - Post-workout meal
+                                <br>&nbsp;&nbsp;&nbsp;• Protein + carbs
+                                <br>&nbsp;&nbsp;&nbsp;• Dinner
+                            </div>
+                        </div>
+                        <div class="alert alert-warning">
+                            <span>⚠️</span>
+                            <span><strong>Don't:</strong> Heavy meal 2 hours before workout</span>
+                        </div>
+                    `;
+                }
+
+                const resultsDiv = document.getElementById('nutritionResults');
+                resultsDiv.innerHTML = html;
+            }
+
+            openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('active');
+                }
+            }
+
+            closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+            }
+
+            exportData() {
+                const dataStr = JSON.stringify(this.data, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `workout-data-${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+            }
+
+            importData(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const imported = JSON.parse(e.target.result);
+                        this.data = imported;
+                        this.saveData();
+                        this.render();
+                        alert('Data imported successfully!');
+                    } catch (error) {
+                        alert('Error importing data. Please check the file format.');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Initialize app
+        new WorkoutApp();
+    </script>
+</body>
+</html>

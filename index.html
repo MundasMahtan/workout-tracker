@@ -1676,7 +1676,13 @@
             }
 
             getActualSwimWeek() {
+                // Just return the current swim program week (respects manual overrides)
+                return Math.min(this.data.swimProgramWeek || 1, 20);
+            }
+
+            updateSwimProgramWeekFromRegression() {
                 // Check last 2 weeks (4 sessions) for regression
+                // ONLY call this when logging a session
                 const currentWeek = this.getCurrentWeekNumber();
                 const lastTwoWeeksSessions = this.data.sessions.filter(s => 
                     s.type === 'swim' && 
@@ -1688,8 +1694,8 @@
                 
                 // If less than 2 completed out of last 4 → don't advance program
                 if (lastTwoWeeksSessions.length >= 4 && completedCount < 2) {
-                    // Stay at current program week
-                    return this.data.swimProgramWeek;
+                    // Stay at current program week (regression triggered)
+                    return;
                 }
                 
                 // Advance program normally
@@ -1697,8 +1703,6 @@
                     this.data.swimProgramWeek = currentWeek;
                     this.saveData();
                 }
-                
-                return Math.min(this.data.swimProgramWeek || 1, 20);
             }
 
             getWeekDates(offset = 0) {
@@ -2647,6 +2651,11 @@
                     this.data.sessions[idx].date = new Date().toISOString();
                     if (gymAreas) this.data.sessions[idx].gymSubstitution = gymAreas;
                     else delete this.data.sessions[idx].gymSubstitution;
+                }
+
+                // Swim progression/regression (only update if actually logging a swim)
+                if (type === 'swim') {
+                    this.updateSwimProgramWeekFromRegression();
                 }
 
                 // Strength progression

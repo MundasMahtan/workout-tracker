@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Tracker v5.1</title>
+    <title>Workout Tracker v6</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
             --primary-green: #2ecc71;
@@ -39,10 +35,7 @@
             border-left: 4px solid var(--primary-green);
         }
 
-        .header h1 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
+        .header h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
 
         .header-info {
             display: grid;
@@ -52,15 +45,8 @@
             color: var(--text-dim);
         }
 
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .info-value {
-            color: var(--primary-green);
-            font-weight: 600;
-        }
+        .info-item { display: flex; justify-content: space-between; }
+        .info-value { color: var(--primary-green); font-weight: 600; }
 
         .btn {
             padding: 0.75rem 1.5rem;
@@ -72,15 +58,8 @@
             font-size: 0.95rem;
         }
 
-        .btn-primary {
-            background: var(--primary-green);
-            color: var(--dark-bg);
-        }
-
-        .btn-primary:hover {
-            background: #27ae60;
-            transform: translateY(-2px);
-        }
+        .btn-primary { background: var(--primary-green); color: var(--dark-bg); }
+        .btn-primary:hover { background: #27ae60; transform: translateY(-2px); }
 
         .btn-secondary {
             background: var(--card-bg);
@@ -88,15 +67,8 @@
             border: 2px solid var(--primary-green);
         }
 
-        .btn-secondary:hover {
-            background: var(--primary-green);
-            color: var(--dark-bg);
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
-        }
+        .btn-secondary:hover { background: var(--primary-green); color: var(--dark-bg); }
+        .btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
 
         .card {
             background: var(--card-bg);
@@ -106,22 +78,11 @@
             border-left: 4px solid var(--primary-green);
         }
 
-        .card h2 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary-green);
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-light);
-        }
+        .card h2 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--primary-green); }
 
         .session-row {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 1rem;
             align-items: center;
             padding: 1rem;
@@ -132,18 +93,14 @@
         }
 
         @media (max-width: 768px) {
-            .session-row {
-                grid-template-columns: 1fr;
-            }
+            .session-row { grid-template-columns: 1fr; }
         }
 
-        .session-label {
-            color: var(--text-dim);
-            font-size: 0.85rem;
-        }
+        .session-label { color: var(--text-dim); font-size: 0.85rem; }
 
         .session-status {
             padding: 0.5rem 1rem;
+            border: none;
             border-radius: 4px;
             font-size: 0.85rem;
             font-weight: 600;
@@ -152,42 +109,25 @@
             transition: all 0.2s;
         }
 
-        .status-completed {
-            background: var(--success);
-            color: white;
-        }
-
-        .status-skip {
-            background: var(--warning);
-            color: white;
-        }
-
-        .status-pending {
-            background: var(--text-dim);
-            color: var(--dark-bg);
-            cursor: pointer;
-        }
-
-        .status-pending:hover {
-            background: var(--gold);
-        }
+        .status-completed { background: var(--success); color: white; }
+        .status-skipped { background: var(--warning); color: white; }
+        .status-pending { background: var(--text-dim); color: var(--dark-bg); }
+        .status-pending:hover { background: var(--gold); }
+        .status-inactive { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+        .status-inactive:hover { background: var(--gold); color: var(--dark-bg); }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: var(--card-bg);
@@ -200,14 +140,9 @@
             overflow-y: auto;
         }
 
-        .modal-content h3 {
-            margin-bottom: 1.5rem;
-            color: var(--warning);
-        }
+        .modal-content h3 { margin-bottom: 1.5rem; color: var(--primary-green); }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+        .form-group { margin-bottom: 1.5rem; }
 
         .form-group label {
             display: block;
@@ -216,8 +151,7 @@
             color: var(--primary-green);
         }
 
-        .form-group input,
-        .form-group select {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 0.75rem;
             background: rgba(255, 255, 255, 0.1);
@@ -227,11 +161,12 @@
             font-size: 1rem;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             background: rgba(46, 204, 113, 0.1);
         }
+
+        .form-group select option { background: var(--card-bg); }
 
         .modal-buttons {
             display: flex;
@@ -240,14 +175,8 @@
             flex-wrap: wrap;
         }
 
-        .modal-close {
-            background: var(--text-dim);
-            color: var(--dark-bg);
-        }
-
-        .modal-close:hover {
-            background: var(--text-light);
-        }
+        .modal-close { background: var(--text-dim); color: var(--dark-bg); }
+        .modal-close:hover { background: var(--text-light); }
 
         .program-view {
             background: rgba(46, 204, 113, 0.05);
@@ -256,10 +185,7 @@
             margin-bottom: 1rem;
         }
 
-        .program-view h4 {
-            color: var(--primary-green);
-            margin-bottom: 0.5rem;
-        }
+        .program-view h4 { color: var(--primary-green); margin-bottom: 0.5rem; }
 
         .program-section {
             margin-bottom: 1rem;
@@ -267,20 +193,9 @@
             border-bottom: 1px solid rgba(46, 204, 113, 0.2);
         }
 
-        .program-section:last-child {
-            border-bottom: none;
-        }
-
-        .section-name {
-            font-weight: 600;
-            color: var(--text-light);
-            margin-bottom: 0.3rem;
-        }
-
-        .section-distance {
-            font-size: 0.85rem;
-            color: var(--primary-green);
-        }
+        .program-section:last-child { border-bottom: none; }
+        .section-name { font-weight: 600; color: var(--text-light); margin-bottom: 0.3rem; }
+        .section-distance { font-size: 0.85rem; color: var(--primary-green); }
 
         .section-details {
             font-size: 0.85rem;
@@ -304,24 +219,10 @@
             border: 1px solid rgba(46, 204, 113, 0.2);
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-green);
-        }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary-green); }
+        .stat-label { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.3rem; }
 
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-            margin-top: 0.3rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
 
         .tab-btn {
             padding: 0.75rem 1.5rem;
@@ -339,13 +240,8 @@
             border-color: var(--primary-green);
         }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .override-btn {
             background: white;
@@ -360,10 +256,7 @@
             transition: all 0.2s;
         }
 
-        .override-btn:hover {
-            background: var(--primary-green);
-            color: white;
-        }
+        .override-btn:hover { background: var(--primary-green); color: white; }
 
         .pattern-card {
             background: rgba(46, 204, 113, 0.05);
@@ -385,24 +278,16 @@
             background: rgba(46, 204, 113, 0.2);
         }
 
-        .pattern-name {
-            font-weight: 600;
-            color: var(--primary-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .pattern-desc {
-            font-size: 0.85rem;
-            color: var(--text-dim);
-        }
+        .pattern-name { font-weight: 600; color: var(--primary-green); margin-bottom: 0.5rem; }
+        .pattern-desc { font-size: 0.85rem; color: var(--text-dim); }
 
         .warning-banner {
-            background: rgba(231, 76, 60, 0.1);
-            border-left: 4px solid var(--warning);
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid var(--gold);
             padding: 1rem;
             border-radius: 4px;
             margin-bottom: 1rem;
-            color: var(--warning);
+            color: var(--gold);
         }
     </style>
 </head>
@@ -413,16 +298,12 @@
         class WorkoutApp {
             constructor() {
                 this.data = this.loadData();
-                this.checkForWeek20Milestone();
+                this.justFinishedSwim = false;
+                this.justFinishedStrength = false;
                 this.render();
             }
 
-            loadData() {
-                const saved = localStorage.getItem('workoutData');
-                if (saved) {
-                    return JSON.parse(saved);
-                }
-
+            defaultData() {
                 return {
                     userWeight: null,
                     programStart: new Date().toISOString(),
@@ -432,20 +313,33 @@
                     strengthReachedWeek20: false,
                     swimMaintenancePattern: 'maintenance',
                     strengthMaintenancePattern: 'maintenance',
+                    swimMaintenanceStart: null,
+                    strengthMaintenanceStart: null,
                     sessions: [],
                     nutrition: {
-                        breakfastCals: 400,
-                        breakfastTime: '07:00',
-                        snack1Cals: 200,
-                        snack1Time: '10:00',
-                        lunchCals: 600,
-                        lunchTime: '12:30',
-                        snack2Cals: 200,
-                        snack2Time: '16:00',
-                        dinnerCals: 600,
-                        dinnerTime: '19:00',
+                        breakfastCals: 400, breakfastTime: '07:00',
+                        snack1Cals: 200, snack1Time: '10:00',
+                        lunchCals: 600, lunchTime: '12:30',
+                        snack2Cals: 200, snack2Time: '16:00',
+                        dinnerCals: 600, dinnerTime: '19:00'
                     }
                 };
+            }
+
+            loadData() {
+                const defaults = this.defaultData();
+                const saved = localStorage.getItem('workoutData');
+                if (!saved) return defaults;
+                let parsed;
+                try {
+                    parsed = JSON.parse(saved);
+                } catch {
+                    return defaults;
+                }
+                const data = Object.assign({}, defaults, parsed);
+                data.nutrition = Object.assign({}, defaults.nutrition, parsed.nutrition || {});
+                if (!Array.isArray(data.sessions)) data.sessions = [];
+                return data;
             }
 
             saveData() {
@@ -455,216 +349,268 @@
             getCurrentWeekNumber() {
                 const start = new Date(this.data.programStart);
                 const now = new Date();
-                const diffMs = now - start;
-                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                const diffWeeks = Math.floor(diffDays / 7);
-                return Math.max(1, 1 + diffWeeks);
+                const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+                return Math.max(1, 1 + Math.floor(diffDays / 7));
             }
 
-            checkForWeek20Milestone() {
-                const currentWeek = this.getCurrentWeekNumber();
-                
-                if (!this.data.swimReachedWeek20 && this.data.swimProgramWeek >= 20) {
-                    this.data.swimReachedWeek20 = true;
-                    this.saveData();
-                }
-
-                if (!this.data.strengthReachedWeek20 && this.data.currentStrengthLevel >= 20) {
-                    this.data.strengthReachedWeek20 = true;
-                    this.saveData();
-                }
-            }
+            // ---------- DISPLAY WEEK / LEVEL (program is decoupled from calendar) ----------
 
             getDisplaySwimWeek() {
                 if (!this.data.swimReachedWeek20) {
-                    return Math.min(this.data.swimProgramWeek || 1, 20);
+                    return Math.min(Math.max(this.data.swimProgramWeek || 1, 1), 20);
                 }
-                return this.getMaintenanceWeek('swim');
+                const start = this.data.swimMaintenanceStart || this.getCurrentWeekNumber();
+                const cur = this.getCurrentWeekNumber();
+                if (cur < start) return 20; // remainder of the finish week: show week 20, rotation starts next week
+                const off = cur - start;
+                switch (this.data.swimMaintenancePattern) {
+                    case 'retention':
+                        return Math.floor(off / 2) % 2 === 0 ? 20 : 7;
+                    case 'buildback':
+                        return 16 + (off % 5);
+                    default:
+                        return 20;
+                }
             }
 
             getDisplayStrengthLevel() {
                 if (!this.data.strengthReachedWeek20) {
-                    return Math.min(this.data.currentStrengthLevel || 0, 20);
+                    return Math.min(Math.max(this.data.currentStrengthLevel || 0, 0), 20);
                 }
-                return this.getMaintenanceLevel('strength');
-            }
-
-            getMaintenanceWeek(type) {
-                const pattern = type === 'swim' ? this.data.swimMaintenancePattern : this.data.strengthMaintenancePattern;
-                const currentWeek = this.getCurrentWeekNumber();
-
-                switch (pattern) {
-                    case 'maintenance':
-                        return 20;
+                const start = this.data.strengthMaintenanceStart || this.getCurrentWeekNumber();
+                const cur = this.getCurrentWeekNumber();
+                if (cur < start) return 20; // remainder of the finish week: show level 20, rotation starts next week
+                const off = cur - start;
+                switch (this.data.strengthMaintenancePattern) {
                     case 'retention':
-                        const cyclePos = Math.floor((currentWeek - 21) / 2) % 2;
-                        return cyclePos === 0 ? 20 : 7;
+                        return Math.floor(off / 2) % 2 === 0 ? 20 : 10;
                     case 'buildback':
-                        const buildPos = (currentWeek - 21) % 5;
-                        return 16 + buildPos;
+                        return 16 + (off % 5);
                     default:
                         return 20;
                 }
             }
 
-            getMaintenanceLevel(type) {
-                const pattern = type === 'strength' ? this.data.strengthMaintenancePattern : this.data.swimMaintenancePattern;
-                const currentWeek = this.getCurrentWeekNumber();
+            // ---------- SESSION LOOKUP ----------
 
-                switch (pattern) {
-                    case 'maintenance':
-                        return 20;
-                    case 'retention':
-                        const cyclePos = Math.floor((currentWeek - 21) / 2) % 2;
-                        return cyclePos === 0 ? 20 : 10;
-                    case 'buildback':
-                        const buildPos = (currentWeek - 21) % 5;
-                        return 16 + buildPos;
-                    default:
-                        return 20;
+            findSwimSession(slot) {
+                if (!this.data.swimReachedWeek20) {
+                    const w = this.data.swimProgramWeek;
+                    return this.data.sessions.find(s =>
+                        s.type === 'swim' && s.slot === slot && s.programWeek === w && !s.maintenance
+                    );
                 }
+                const cw = this.getCurrentWeekNumber();
+                return this.data.sessions.find(s =>
+                    s.type === 'swim' && s.slot === slot && s.calendarWeek === cw && s.maintenance
+                );
+            }
+
+            findTodayStrengthSession() {
+                const today = new Date().toDateString();
+                return this.data.sessions.find(s =>
+                    s.type === 'strength' && new Date(s.date).toDateString() === today
+                );
+            }
+
+            // ---------- LOGGING + PROGRESSION ----------
+
+            logSwimSession(slot, completed) {
+                const existing = this.findSwimSession(slot);
+                if (existing) {
+                    existing.completed = completed;
+                } else {
+                    this.data.sessions.push({
+                        type: 'swim',
+                        slot: slot,
+                        programWeek: this.getDisplaySwimWeek(),
+                        calendarWeek: this.getCurrentWeekNumber(),
+                        maintenance: this.data.swimReachedWeek20,
+                        completed: completed,
+                        date: new Date().toISOString()
+                    });
+                }
+
+                if (!this.data.swimReachedWeek20) {
+                    this.checkSwimAdvancement();
+                }
+
+                this.saveData();
+                this.render();
+            }
+
+            checkSwimAdvancement() {
+                const w = this.data.swimProgramWeek;
+                const wedDone = this.data.sessions.some(s =>
+                    s.type === 'swim' && s.slot === 'wed' && s.programWeek === w && !s.maintenance && s.completed
+                );
+                const friDone = this.data.sessions.some(s =>
+                    s.type === 'swim' && s.slot === 'fri' && s.programWeek === w && !s.maintenance && s.completed
+                );
+
+                if (wedDone && friDone) {
+                    if (w >= 20) {
+                        this.data.swimReachedWeek20 = true;
+                        // Pattern rotation formally begins at the start of NEXT calendar week
+                        this.data.swimMaintenanceStart = this.getCurrentWeekNumber() + 1;
+                        this.justFinishedSwim = true;
+                    } else {
+                        this.data.swimProgramWeek = w + 1;
+                    }
+                }
+            }
+
+            logStrengthSession(completed) {
+                let s = this.findTodayStrengthSession();
+                if (s) {
+                    if (completed && !s.completed && !s.advanced) {
+                        s.completed = true;
+                        this.advanceStrength(s);
+                    } else if (!completed) {
+                        s.completed = false;
+                    }
+                } else {
+                    s = {
+                        type: 'strength',
+                        programLevel: this.getDisplayStrengthLevel(),
+                        calendarWeek: this.getCurrentWeekNumber(),
+                        maintenance: this.data.strengthReachedWeek20,
+                        completed: completed,
+                        advanced: false,
+                        date: new Date().toISOString()
+                    };
+                    this.data.sessions.push(s);
+                    if (completed) {
+                        this.advanceStrength(s);
+                    }
+                }
+
+                this.saveData();
+                this.render();
+            }
+
+            advanceStrength(session) {
+                session.advanced = true;
+                if (this.data.strengthReachedWeek20) return;
+
+                if (this.data.currentStrengthLevel >= 20) {
+                    this.data.strengthReachedWeek20 = true;
+                    // Pattern rotation formally begins at the start of NEXT calendar week
+                    this.data.strengthMaintenanceStart = this.getCurrentWeekNumber() + 1;
+                    this.justFinishedStrength = true;
+                } else {
+                    this.data.currentStrengthLevel += 1;
+                }
+            }
+
+            // ---------- PROGRAMS ----------
+
+            getSwimProgramsTable() {
+                const programs = {
+                    1: { wed: { type: 'Easy Endurance', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['400m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m choice'] }, { name: 'Main Set (1200m)', distance: '1200m', details: ['1200m continuous @ 70%', 'Steady pace'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Endurance + Speed', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['400m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m catch-up'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['8x150m @ 3:00', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    2: { wed: { type: 'Longer Endurance', total: '2600m', time: '~56 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (250m)', distance: '250m', details: ['5x50m side kick'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70%', 'Controlled'] }, { name: 'Cool-down (250m)', distance: '250m', details: ['250m easy'] }] }, fri: { type: 'Mixed Intervals', total: '2700m', time: '~58 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['500m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m 6-kick switch'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['10x100m @ 2:05 (base + 5 sec)', '70% effort', 'Rest 65 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    3: { wed: { type: 'Longer Endurance', total: '2700m', time: '~58 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['600m swim', '200m kick', '100m pull'] }, { name: 'Drills (250m)', distance: '250m', details: ['5x50m fingertip drag'] }, { name: 'Main Set (1350m)', distance: '1350m', details: ['1350m continuous @ 70%', 'Slightly faster than Week 2'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Interval Progression', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['500m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m high elbow catch'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5x200m @ 4:10 (base + 10 sec)', '70% effort', 'Rest 70 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    4: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m one-arm drill'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Speed Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['500m swim', '300m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m sculling'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['8x150m @ 3:00', '70% effort', 'Rest 90 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    5: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70-72%', 'Slightly faster'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Mixed Intervals', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['500m swim', '300m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['8x100m @ 2:00 - 70%', 'Rest 90 sec', 'then 5x150m @ 3:00 - 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    6: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70-72%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5x250m @ 5:00 (base + 10 sec)', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    7: { wed: { type: 'Easy Endurance (RECOVERY)', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim (60% easy)', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m technique focus'] }, { name: 'Main Set (1100m)', distance: '1100m', details: ['1000m continuous @ 65-70% (EASY!)', 'Recovery pace', 'Focus on technique'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Easy Intervals (RECOVERY)', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['10x100m @ 2:10 (base + 10 sec)', '65-70% effort (RECOVERY!)', 'Should feel easy'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    8: { wed: { type: 'Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['700m swim', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['1400m continuous @ 70%', 'Back to normal training pace'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['6x200m @ 4:00 (base x 2)', 'Target ~3:53-3:55, 5-7 sec rest', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    9: { wed: { type: 'Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['700m swim', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['1400m continuous @ 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['6x200m @ 3:55', 'Target 3:48-3:50', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    10: { wed: { type: 'Easy Endurance (RECOVERY)', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim (60% easy)', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m technique'] }, { name: 'Main Set (1100m)', distance: '1100m', details: ['1000m continuous @ 65-70% (EASY!)', 'Recovery week'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Easy Intervals (RECOVERY)', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4x50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['10x100m @ 2:10', '65-70% effort', 'Recovery week'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    11: { wed: { type: 'Speed Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m catch-up'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['10x100m @ 1:55 (base - 5 sec)', '72% effort', 'Rest 65 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m high elbow'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['4x300m @ 5:50 (base - 10 sec)', '73% effort', 'Rest 90 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
+                    12: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m sculling'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m continuous @ 72%', 'Controlled speed'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6x50m one-arm'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5x250m @ 4:45', 'Target 4:38-4:40', '73% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } }
+                };
+
+                // Weeks 13-20 = second cycle of weeks 5-12, swum at slightly higher effort.
+                // Week 15 = recovery (from 7), week 18 = recovery (from 10), week 20 = peak (from 12).
+                for (let w = 13; w <= 20; w++) {
+                    const src = programs[w - 8];
+                    const copy = JSON.parse(JSON.stringify(src));
+                    copy.wed.type += ' - Cycle 2';
+                    copy.fri.type += ' - Cycle 2';
+                    copy.wed.sections.forEach(sec => {
+                        if (sec.name.indexOf('Main Set') === 0) {
+                            sec.details.push('Cycle 2: aim slightly faster than first time through');
+                        }
+                    });
+                    copy.fri.sections.forEach(sec => {
+                        if (sec.name.indexOf('Main Set') === 0) {
+                            sec.details.push('Cycle 2: aim slightly faster than first time through');
+                        }
+                    });
+                    programs[w] = copy;
+                }
+
+                return programs;
             }
 
             getSwimmingProgram() {
-                const programs = {
-                    1: { wed: { type: 'Easy Endurance', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['400m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m choice'] }, { name: 'Main Set (1200m)', distance: '1200m', details: ['1200m continuous @ 70%', 'Steady pace'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Endurance + Speed', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['400m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m catch-up'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['8×150m @ 3:00', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    2: { wed: { type: 'Longer Endurance', total: '2600m', time: '~56 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (250m)', distance: '250m', details: ['5×50m side kick'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70%', 'Controlled'] }, { name: 'Cool-down (250m)', distance: '250m', details: ['250m easy'] }] }, fri: { type: 'Mixed Intervals', total: '2700m', time: '~58 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['500m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m 6-kick switch'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['10×100m @ 2:05 (base + 5 sec)', '70% effort', 'Rest 65 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    3: { wed: { type: 'Longer Endurance', total: '2700m', time: '~58 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['600m swim', '200m kick', '100m pull'] }, { name: 'Drills (250m)', distance: '250m', details: ['5×50m fingertip drag'] }, { name: 'Main Set (1350m)', distance: '1350m', details: ['1350m continuous @ 70%', 'Slightly faster'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Interval Progression', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (900m)', distance: '900m', details: ['500m swim', '200m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m high elbow catch'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×200m @ 4:10', '70% effort', 'Rest 70 sec'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    4: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m one-arm'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Speed Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['500m swim', '300m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m sculling'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['8×150m @ 3:00', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    5: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70-72%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Mixed Intervals', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['500m swim', '300m kick', '200m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['8×100m @ 2:00 - 70%', 'Rest 90 sec', '5×150m @ 3:00 - 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    6: { wed: { type: 'Longer Endurance', total: '2800m', time: '~60 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['1300m continuous @ 70-72%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 5:00', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    7: { wed: { type: 'Easy Endurance (RECOVERY)', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim (60%)', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m technique'] }, { name: 'Main Set (1100m)', distance: '1100m', details: ['1000m @ 65-70%', 'Recovery pace'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Easy Intervals (RECOVERY)', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['10×100m @ 2:10', '65-70% (RECOVERY!)'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    8: { wed: { type: 'Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['700m swim', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['1400m @ 70%', 'Normal pace'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['6×200m @ 4:00', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    9: { wed: { type: 'Endurance', total: '2900m', time: '~62 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['700m swim', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1400m)', distance: '1400m', details: ['1400m @ 70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Longer Intervals', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m choice'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['6×200m @ 3:55', '70% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    10: { wed: { type: 'Easy Endurance (RECOVERY)', total: '2400m', time: '~52 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim (60%)', '200m kick', '100m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m technique'] }, { name: 'Main Set (1100m)', distance: '1100m', details: ['1000m @ 65-70%', 'Recovery'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Easy Intervals (RECOVERY)', total: '2500m', time: '~54 min', sections: [{ name: 'Warm-up (800m)', distance: '800m', details: ['500m swim', '200m kick', '100m pull'] }, { name: 'Drills (200m)', distance: '200m', details: ['4×50m choice'] }, { name: 'Main Set (1300m)', distance: '1300m', details: ['10×100m @ 2:10', '65-70%'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    11: { wed: { type: 'Speed Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m catch-up'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['10×100m @ 1:55', '72% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m high elbow'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['4×300m @ 5:50', '73% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    12: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m sculling'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%', 'Controlled'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Drills (300m)', distance: '300m', details: ['6×50m one-arm'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45', '73% effort'] }, { name: 'Cool-down (200m)', distance: '200m', details: ['200m easy'] }] } },
-                    13: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    14: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    15: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    16: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    17: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    18: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    19: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } },
-                    20: { wed: { type: 'Peak Endurance', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['1500m @ 72%'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] }, fri: { type: 'Peak Power', total: '3000m', time: '~64 min', sections: [{ name: 'Warm-up (1000m)', distance: '1000m', details: ['600m swim', '200m kick', '200m pull'] }, { name: 'Main Set (1500m)', distance: '1500m', details: ['5×250m @ 4:45'] }, { name: 'Cool-down (500m)', distance: '500m', details: ['500m easy'] }] } }
-                };
-
+                const programs = this.getSwimProgramsTable();
                 const week = this.getDisplaySwimWeek();
                 return programs[week] || programs[20];
             }
 
             getStrengthProgram() {
                 const programs = {
-                    0: { name: 'Foundation 1', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '5-10', notes: 'Knees ok' }, { name: 'Dips on Chair', reps: '5-10', notes: 'Assist' }, { name: 'Lat Pulldowns', reps: '5-10', notes: 'Assisted' }, { name: 'Hollow Body Holds', reps: '20-30 sec', notes: 'Core' }] },
-                    1: { name: 'Foundation 2', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '8-12', notes: 'Progress' }, { name: 'Dips on Chair', reps: '8-12', notes: 'Assist' }, { name: 'Pull-up Negatives', reps: '5-8', notes: 'Eccentric' }, { name: 'Hollow Body Holds', reps: '30-40 sec', notes: 'Core' }] },
-                    2: { name: 'Foundation 3', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '10-15', notes: 'Steady' }, { name: 'Dips on Chair', reps: '10-15', notes: 'Minimal assist' }, { name: 'Pull-up Negatives', reps: '8-10', notes: 'Slower' }, { name: 'Plank Hold', reps: '40-50 sec', notes: 'Core' }] },
-                    3: { name: 'Intermediate 1', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '15-20', notes: 'Full' }, { name: 'Dips on Chair', reps: '15-20', notes: 'Unassisted' }, { name: 'Pull-ups', reps: '1-3', notes: 'Band assist' }, { name: 'Dead Bug', reps: '20 (10 each)', notes: 'Core' }] },
-                    4: { name: 'Intermediate 2', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '20-25', notes: 'Controlled' }, { name: 'Dips on Chair', reps: '20-25', notes: 'Full range' }, { name: 'Pull-ups', reps: '3-5', notes: 'Band assist' }, { name: 'Mountain Climbers', reps: '30 (15 each)', notes: 'Core + cardio' }] },
-                    5: { name: 'Intermediate 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '25-30', notes: 'Fast' }, { name: 'Dips on Chair', reps: '25-30', notes: 'Explosive' }, { name: 'Pull-ups', reps: '5-8', notes: 'Minimal assist' }, { name: 'Russian Twists (2×4kg)', reps: '20 (10 each)', notes: 'Core' }] },
-                    6: { name: 'Advanced 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '30+', notes: 'Full unbroken' }, { name: 'Dips on Chair', reps: '30+', notes: 'Full' }, { name: 'Pull-ups', reps: '8-10', notes: 'Unassisted' }, { name: 'Dumbbell Flutters (2×4kg)', reps: '30 (15 each)', notes: 'Core' }] },
-                    7: { name: 'Advanced 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '35-40', notes: 'Steady' }, { name: 'Weighted Dips', reps: '15-20', notes: 'With weight' }, { name: 'Pull-ups', reps: '10-12', notes: 'Unassisted' }, { name: 'Lateral Lunges (2×4kg)', reps: '20 (10 each)', notes: 'Legs' }] },
-                    8: { name: 'Advanced 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '40-45', notes: 'Controlled' }, { name: 'Weighted Dips', reps: '20-25', notes: 'More weight' }, { name: 'Pull-ups', reps: '12-15', notes: 'Clean form' }, { name: 'Bulgarian Split Squats (2×4kg)', reps: '15 each', notes: 'Legs' }] },
-                    9: { name: 'Elite 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45-50', notes: 'Strong pace' }, { name: 'Weighted Dips', reps: '25-30', notes: 'Heavy' }, { name: 'Pull-ups', reps: '15-18', notes: 'Power' }, { name: 'Jump Squats', reps: '30', notes: 'Explosive' }] },
-                    10: { name: 'Elite 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Diamond Push-ups', reps: '25-30', notes: 'Tricep focus' }, { name: 'Weighted Dips', reps: '30-35', notes: 'Max weight' }, { name: 'Pull-ups', reps: '18-20', notes: 'Consistent' }, { name: 'Box Jumps', reps: '20', notes: 'Power' }] },
-                    11: { name: 'Elite 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'One-arm Push-up Negatives', reps: '8-10', notes: 'Eccentric' }, { name: 'Dips (max)', reps: '35+', notes: 'Unweighted' }, { name: 'Wide-grip Pull-ups', reps: '15-18', notes: 'Lat focus' }, { name: 'Pistol Squat Practice (2×4kg)', reps: '5 each', notes: 'Mobility' }] },
-                    12: { name: 'Maintenance Peak', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '40', notes: 'Peak maintenance' }, { name: 'Dips', reps: '30', notes: 'Solid' }, { name: 'Pull-ups', reps: '15', notes: 'Steady' }, { name: 'Handstand Hold', reps: '30 sec', notes: 'Skill' }] },
-                    13: { name: 'Maintenance Peak+', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45', notes: 'Power' }, { name: 'Dips', reps: '35', notes: 'Explosive' }, { name: 'Pull-ups', reps: '18', notes: 'Strong' }, { name: 'Handstand Walk', reps: '10-20m', notes: 'Skill' }] },
-                    14: { name: 'Skill Work 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'One-arm Push-ups', reps: '3-5 each', notes: 'Skill' }, { name: 'Ring Dips', reps: '8-12', notes: 'Skill' }, { name: 'Archer Pull-ups', reps: '5-8 each', notes: 'Skill' }, { name: 'L-Sit Hold', reps: '15-20 sec', notes: 'Skill' }] },
-                    15: { name: 'Skill Work 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Pseudo Planche Push-ups', reps: '5-8', notes: 'Advanced' }, { name: 'Handstand Push-up Negatives', reps: '8-10', notes: 'Skill' }, { name: 'Front Lever Progression', reps: '10-20 sec', notes: 'Skill' }, { name: 'Planche Hold Progression', reps: '10-15 sec', notes: 'Advanced' }] },
-                    16: { name: 'Maintenance Peak', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '40', notes: 'Peak' }, { name: 'Dips', reps: '30', notes: 'Solid' }, { name: 'Pull-ups', reps: '15', notes: 'Steady' }, { name: 'Handstand Hold', reps: '30 sec', notes: 'Skill' }] },
-                    17: { name: 'Maintenance Peak+', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45', notes: 'Power' }, { name: 'Dips', reps: '35', notes: 'Explosive' }, { name: 'Pull-ups', reps: '18', notes: 'Strong' }, { name: 'Handstand Walk', reps: '10-20m', notes: 'Skill' }] },
-                    18: { name: 'Skill Work 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'One-arm Push-ups', reps: '3-5 each', notes: 'Skill' }, { name: 'Ring Dips', reps: '8-12', notes: 'Skill' }, { name: 'Archer Pull-ups', reps: '5-8 each', notes: 'Skill' }, { name: 'L-Sit Hold', reps: '15-20 sec', notes: 'Skill' }] },
-                    19: { name: 'Skill Work 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Pseudo Planche Push-ups', reps: '5-8', notes: 'Advanced' }, { name: 'Handstand Push-up Negatives', reps: '8-10', notes: 'Skill' }, { name: 'Front Lever Progression', reps: '10-20 sec', notes: 'Skill' }, { name: 'Planche Hold Progression', reps: '10-15 sec', notes: 'Advanced' }] },
-                    20: { name: 'Peak Performance', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45+', notes: 'Strength + endurance' }, { name: 'Dips (weighted)', reps: '35+', notes: 'Max' }, { name: 'Pull-ups (wide)', reps: '20+', notes: 'Full strength' }, { name: 'Planche Progression', reps: '15-20 sec', notes: 'Ultimate' }] }
+                    0: { name: 'Foundation 1', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '5-10', notes: 'Knees ok' }, { name: 'Dips on Chair', reps: '5-10', notes: 'Assist with feet' }, { name: 'Lat Pulldowns (pull-up bar)', reps: '5-10', notes: 'Assisted' }, { name: 'Hollow Body Holds', reps: '20-30 sec', notes: 'Core' }] },
+                    1: { name: 'Foundation 2', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '8-12', notes: 'Increase reps' }, { name: 'Dips on Chair', reps: '8-12', notes: 'Assist' }, { name: 'Pull-up Negatives', reps: '5-8', notes: '3-5 sec descent' }, { name: 'Hollow Body Holds', reps: '30-40 sec', notes: 'Core' }] },
+                    2: { name: 'Foundation 3', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '10-15', notes: 'Steady' }, { name: 'Dips on Chair', reps: '10-15', notes: 'Minimal assist' }, { name: 'Pull-up Negatives', reps: '8-10', notes: 'Slower descent' }, { name: 'Plank Hold', reps: '40-50 sec', notes: 'Core' }] },
+                    3: { name: 'Intermediate 1', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '15-20', notes: 'Full' }, { name: 'Dips on Chair', reps: '15-20', notes: 'Unassisted' }, { name: 'Pull-ups', reps: '1-3', notes: 'Band assist ok' }, { name: 'Dead Bug', reps: '20 (10 each side)', notes: 'Core' }] },
+                    4: { name: 'Intermediate 2', rounds: 3, restTime: '2 min', exercises: [{ name: 'Push-ups', reps: '20-25', notes: 'Controlled' }, { name: 'Dips on Chair', reps: '20-25', notes: 'Full range' }, { name: 'Pull-ups', reps: '3-5', notes: 'Band assist ok' }, { name: 'Mountain Climbers', reps: '30 (15 each side)', notes: 'Core + cardio' }] },
+                    5: { name: 'Intermediate 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '25-30', notes: 'Fast' }, { name: 'Dips on Chair', reps: '25-30', notes: 'Explosive' }, { name: 'Pull-ups', reps: '5-8', notes: 'Minimal assist' }, { name: 'Russian Twists (2x4kg)', reps: '20 (10 each side)', notes: 'Core' }] },
+                    6: { name: 'Advanced 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '30+', notes: 'Full unbroken' }, { name: 'Dips on Chair', reps: '30+', notes: 'Full' }, { name: 'Pull-ups', reps: '8-10', notes: 'Unassisted' }, { name: 'Dumbbell Leg Flutters (2x4kg)', reps: '30 (15 each leg)', notes: 'Core' }] },
+                    7: { name: 'Advanced 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '35-40', notes: 'Steady pace' }, { name: 'Weighted Dips', reps: '15-20', notes: 'Backpack or 4kg' }, { name: 'Pull-ups', reps: '10-12', notes: 'Unassisted' }, { name: 'Lateral Lunges (2x4kg)', reps: '20 (10 each side)', notes: 'Legs' }] },
+                    8: { name: 'Advanced 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '40-45', notes: 'Controlled pace' }, { name: 'Weighted Dips', reps: '20-25', notes: 'More weight' }, { name: 'Pull-ups', reps: '12-15', notes: 'Clean form' }, { name: 'Bulgarian Split Squats (2x4kg)', reps: '15 each leg', notes: 'Legs' }] },
+                    9: { name: 'Elite 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45-50', notes: 'Strong pace' }, { name: 'Weighted Dips', reps: '25-30', notes: 'Heavy' }, { name: 'Pull-ups', reps: '15-18', notes: 'Power reps' }, { name: 'Jump Squats', reps: '30', notes: 'Explosive' }] },
+                    10: { name: 'Elite 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Diamond Push-ups', reps: '25-30', notes: 'Tricep focus' }, { name: 'Weighted Dips', reps: '30-35', notes: 'Max weight' }, { name: 'Pull-ups', reps: '18-20', notes: 'Consistent' }, { name: 'Box Jumps (or step)', reps: '20', notes: 'Power' }] },
+                    11: { name: 'Elite 3', rounds: 3, restTime: '90 sec', exercises: [{ name: 'One-arm Push-up Negatives', reps: '8-10', notes: 'Eccentric focus' }, { name: 'Dips (bodyweight max)', reps: '35+', notes: 'Unweighted max' }, { name: 'Wide-grip Pull-ups', reps: '15-18', notes: 'Lat focus' }, { name: 'Pistol Squat Practice (2x4kg)', reps: '5 each leg', notes: 'Mobility' }] },
+                    12: { name: 'Power Endurance 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '40', notes: 'Minimal rest between rounds' }, { name: 'Weighted Dips', reps: '25', notes: 'Steady' }, { name: 'Pull-ups', reps: '15', notes: 'Steady' }, { name: 'Handstand Hold (wall)', reps: '30 sec', notes: 'Skill' }] },
+                    13: { name: 'Power Endurance 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '45', notes: 'Power reps' }, { name: 'Weighted Dips', reps: '30', notes: 'Explosive' }, { name: 'Pull-ups', reps: '18', notes: 'Strong' }, { name: 'Wall Handstand Shoulder Taps', reps: '10-16 taps', notes: 'Skill' }] },
+                    14: { name: 'Skill Strength 1', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Archer Push-ups', reps: '6-10 each side', notes: 'Skill' }, { name: 'Straight Bar Dips', reps: '8-12', notes: 'Skill' }, { name: 'Archer Pull-ups', reps: '5-8 each side', notes: 'Skill' }, { name: 'L-Sit Hold Progression', reps: '15-20 sec', notes: 'Tuck if needed' }] },
+                    15: { name: 'Skill Strength 2', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Pseudo Planche Push-ups', reps: '5-8', notes: 'Lean forward' }, { name: 'Handstand Push-up Negatives', reps: '5-8', notes: 'Wall supported' }, { name: 'Tuck Front Lever Hold', reps: '10-20 sec', notes: 'Skill' }, { name: 'Pistol Squats (2x4kg)', reps: '6-8 each leg', notes: 'Full depth' }] },
+                    16: { name: 'Hypertrophy Block', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Slow Push-ups (3 sec down)', reps: '20-25', notes: 'Time under tension' }, { name: 'Slow Dips (3 sec down)', reps: '15-20', notes: 'Control' }, { name: 'Slow Pull-ups (3 sec down)', reps: '8-12', notes: 'Control' }, { name: 'Copenhagen Plank', reps: '20 sec each side', notes: 'Adductors + core' }] },
+                    17: { name: 'Explosive Block', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Clap Push-ups', reps: '10-15', notes: 'Explosive' }, { name: 'Jump Dips (leave chair)', reps: '10-12', notes: 'Explosive push' }, { name: 'Chest-to-bar Pull-ups', reps: '8-12', notes: 'Pull high' }, { name: 'Broad Jumps', reps: '10', notes: 'Max distance' }] },
+                    18: { name: 'Volume Block', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-up Ladder 1-2-3-4-5', reps: '15 total per round', notes: 'Short rests inside ladder' }, { name: 'Dips', reps: '30', notes: 'Break as needed' }, { name: 'Pull-up Ladder 1-2-3-4', reps: '10 total per round', notes: 'Short rests inside ladder' }, { name: 'Hollow Body Rocks', reps: '20', notes: 'Core' }] },
+                    19: { name: 'Pre-Peak', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Weighted Push-ups (backpack)', reps: '20-25', notes: 'Add load' }, { name: 'Weighted Dips', reps: '20-25', notes: 'Heaviest yet' }, { name: 'Weighted Pull-ups (backpack)', reps: '8-10', notes: 'Add load' }, { name: 'Dragon Flag Negatives', reps: '5-8', notes: 'Advanced core' }] },
+                    20: { name: 'Peak Performance', rounds: 3, restTime: '90 sec', exercises: [{ name: 'Push-ups', reps: '50 unbroken goal', notes: 'Strength + endurance' }, { name: 'Weighted Dips', reps: '30+', notes: 'Max performance' }, { name: 'Pull-ups (wide)', reps: '20 total goal', notes: 'Full strength' }, { name: 'L-Sit to Tuck Planche Attempts', reps: '15-20 sec holds', notes: 'Ultimate skill' }] }
                 };
 
                 const level = this.getDisplayStrengthLevel();
                 return programs[level] || programs[20];
             }
 
-            logSession(type, completed) {
-                const week = this.getCurrentWeekNumber();
-                const today = new Date().toDateString();
-
-                const sessionIndex = this.data.sessions.findIndex(s =>
-                    s.type === type &&
-                    new Date(s.date).toDateString() === today &&
-                    s.week === week
-                );
-
-                if (sessionIndex >= 0) {
-                    this.data.sessions[sessionIndex].completed = completed;
-                } else {
-                    this.data.sessions.push({
-                        type,
-                        completed,
-                        date: new Date().toISOString(),
-                        week
-                    });
-                }
-
-                if (type === 'swim' && completed) {
-                    this.updateSwimProgression();
-                } else if (type === 'strength' && completed) {
-                    this.updateStrengthProgression();
-                }
-
-                this.checkForWeek20Milestone();
-                this.saveData();
-                this.render();
-            }
-
-            updateSwimProgression() {
-                const currentWeek = this.getCurrentWeekNumber();
-                const lastTwoWeeksSessions = this.data.sessions.filter(s =>
-                    s.type === 'swim' &&
-                    s.week >= currentWeek - 2 &&
-                    s.week <= currentWeek &&
-                    s.completed
-                );
-
-                if (lastTwoWeeksSessions.length >= 2 && !this.data.swimReachedWeek20) {
-                    this.data.swimProgramWeek = Math.min(currentWeek, 20);
-                    this.saveData();
-                }
-            }
-
-            updateStrengthProgression() {
-                const currentWeek = this.getCurrentWeekNumber();
-                const lastThreeWeeksSessions = this.data.sessions.filter(s =>
-                    s.type === 'strength' &&
-                    s.week >= currentWeek - 3 &&
-                    s.completed
-                );
-
-                if (lastThreeWeeksSessions.length >= 3 && !this.data.strengthReachedWeek20) {
-                    this.data.currentStrengthLevel = Math.min(this.data.currentStrengthLevel + 1, 20);
-                    this.saveData();
-                }
-            }
+            // ---------- OVERRIDE + PATTERNS ----------
 
             openModal(modalId) {
-                document.getElementById(modalId).classList.add('active');
+                const el = document.getElementById(modalId);
+                if (el) el.classList.add('active');
             }
 
             closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
+                const el = document.getElementById(modalId);
+                if (el) el.classList.remove('active');
             }
 
             handleOverride() {
-                const swimWeek = parseInt(document.getElementById('overrideSwimWeek').value);
-                const strengthLevel = parseInt(document.getElementById('overrideStrengthLevel').value);
+                const swimVal = document.getElementById('overrideSwimWeek').value;
+                const strVal = document.getElementById('overrideStrengthLevel').value;
 
-                if (isNaN(swimWeek) || isNaN(strengthLevel)) {
-                    alert('Please select valid values');
-                    return;
+                if (swimVal !== 'stay') {
+                    const w = parseInt(swimVal);
+                    if (!isNaN(w)) {
+                        this.data.swimProgramWeek = Math.min(Math.max(w, 1), 20);
+                        this.data.swimReachedWeek20 = false;
+                        this.data.swimMaintenanceStart = null;
+                    }
                 }
 
-                if (!this.data.swimReachedWeek20) {
-                    this.data.swimProgramWeek = Math.min(Math.max(swimWeek, 1), 20);
-                }
-                if (!this.data.strengthReachedWeek20) {
-                    this.data.currentStrengthLevel = Math.min(Math.max(strengthLevel, 0), 20);
+                if (strVal !== 'stay') {
+                    const l = parseInt(strVal);
+                    if (!isNaN(l)) {
+                        this.data.currentStrengthLevel = Math.min(Math.max(l, 0), 20);
+                        this.data.strengthReachedWeek20 = false;
+                        this.data.strengthMaintenanceStart = null;
+                    }
                 }
 
                 this.saveData();
@@ -673,387 +619,295 @@
             }
 
             selectMaintenancePattern(type, pattern) {
+                const cur = this.getCurrentWeekNumber();
                 if (type === 'swim') {
                     this.data.swimMaintenancePattern = pattern;
+                    // Re-anchor: the new pattern starts this week - but never earlier
+                    // than the scheduled start (covers picking a pattern during the finish week)
+                    this.data.swimMaintenanceStart = Math.max(cur, this.data.swimMaintenanceStart || cur);
                 } else {
                     this.data.strengthMaintenancePattern = pattern;
+                    this.data.strengthMaintenanceStart = Math.max(cur, this.data.strengthMaintenanceStart || cur);
                 }
                 this.saveData();
                 this.render();
+                // render() rebuilds the page, which closes every modal. Reopen this one so the
+                // selection is visibly marked (active) and the user closes it with Done.
+                this.openModal(type === 'swim' ? 'swimMaintenanceModal' : 'strengthMaintenanceModal');
             }
+
+            // ---------- RENDERING ----------
 
             renderHeader() {
                 const week = this.getCurrentWeekNumber();
-                const swimWeek = this.getDisplaySwimWeek();
-                const strengthLevel = this.getDisplayStrengthLevel();
+                const swimLabel = this.data.swimReachedWeek20
+                    ? 'Maintenance (' + this.data.swimMaintenancePattern + ')'
+                    : 'Week ' + this.getDisplaySwimWeek();
+                const strLabel = this.data.strengthReachedWeek20
+                    ? 'Maintenance (' + this.data.strengthMaintenancePattern + ')'
+                    : 'Level ' + this.getDisplayStrengthLevel();
 
                 return `
                     <div class="header">
-                        <h1>🏊‍♂️ Workout Tracker v5</h1>
+                        <h1>Workout Tracker v6</h1>
                         <div class="header-info">
-                            <div class="info-item">
-                                <span>Current Week</span>
-                                <span class="info-value">${week}</span>
-                            </div>
-                            <div class="info-item">
-                                <span>Swim Program</span>
-                                <span class="info-value">${this.data.swimReachedWeek20 ? '✓ Maintenance' : `Week ${swimWeek}`}</span>
-                            </div>
-                            <div class="info-item">
-                                <span>Strength Program</span>
-                                <span class="info-value">${this.data.strengthReachedWeek20 ? '✓ Maintenance' : `Level ${strengthLevel}`}</span>
-                            </div>
-                            <div class="info-item">
-                                <span>Weight</span>
-                                <span class="info-value">${this.data.userWeight || '—'} kg</span>
-                            </div>
+                            <div class="info-item"><span>Calendar Week</span><span class="info-value">${week}</span></div>
+                            <div class="info-item"><span>Swim Program</span><span class="info-value">${swimLabel}</span></div>
+                            <div class="info-item"><span>Strength Program</span><span class="info-value">${strLabel}</span></div>
+                            <div class="info-item"><span>Weight</span><span class="info-value">${this.data.userWeight || '-'} kg</span></div>
                         </div>
                     </div>
                 `;
             }
 
             renderOverrideSection() {
-                let html = `<div class="card"><h2>⚙️ Program Control</h2>`;
-
+                let banners = '';
                 if (this.data.swimReachedWeek20) {
-                    html += `<div class="warning-banner">🎉 Swimming completed week 20! Now in maintenance mode.</div>`;
+                    banners += `<div class="warning-banner">Swimming: 20-week program completed. Maintenance pattern: <strong>${this.data.swimMaintenancePattern}</strong> (currently showing week ${this.getDisplaySwimWeek()}).</div>`;
                 }
-
                 if (this.data.strengthReachedWeek20) {
-                    html += `<div class="warning-banner">🎉 Strength completed week 20! Now in maintenance mode.</div>`;
+                    banners += `<div class="warning-banner">Strength: 20-level program completed. Maintenance pattern: <strong>${this.data.strengthMaintenancePattern}</strong> (currently showing level ${this.getDisplayStrengthLevel()}).</div>`;
                 }
 
-                html += `
-                    <button class="override-btn" onclick="window.app.openModal('overrideModal')">
-                        🔧 Override Programs
-                    </button>
-                    <p style="font-size: 0.85rem; color: var(--text-dim);">Manually adjust your programs anytime.</p>
-                </div>
+                return `
+                    <div class="card">
+                        <h2>Program Control</h2>
+                        ${banners}
+                        <button class="override-btn" onclick="window.app.openModal('overrideModal')">
+                            Override Swim Week / Strength Level
+                        </button>
+                        <p style="font-size: 0.85rem; color: var(--text-dim);">
+                            Programs advance only when you complete sessions, never by calendar.
+                            Overriding while in maintenance mode returns that program to normal progression.
+                        </p>
+                    </div>
                 `;
-
-                return html;
             }
 
             renderOverrideModal() {
-                let html = `
+                let swimOptions = '';
+                if (this.data.swimReachedWeek20) {
+                    swimOptions += `<option value="stay" selected>(Stay in maintenance)</option>`;
+                }
+                for (let i = 1; i <= 20; i++) {
+                    const selected = (!this.data.swimReachedWeek20 && i === this.data.swimProgramWeek) ? 'selected' : '';
+                    swimOptions += `<option value="${i}" ${selected}>Week ${i}</option>`;
+                }
+
+                let strOptions = '';
+                if (this.data.strengthReachedWeek20) {
+                    strOptions += `<option value="stay" selected>(Stay in maintenance)</option>`;
+                }
+                for (let i = 0; i <= 20; i++) {
+                    const selected = (!this.data.strengthReachedWeek20 && i === this.data.currentStrengthLevel) ? 'selected' : '';
+                    strOptions += `<option value="${i}" ${selected}>Level ${i}</option>`;
+                }
+
+                return `
                     <div class="modal" id="overrideModal">
                         <div class="modal-content">
-                            <h3>🔧 Override Programs</h3>
-                `;
-
-                if (!this.data.swimReachedWeek20) {
-                    html += `
-                        <div class="form-group">
-                            <label>Swim Program Week (1-20)</label>
-                            <select id="overrideSwimWeek">
-                                ${Array.from({length: 20}, (_, i) => {
-                                    const week = i + 1;
-                                    const selected = week === this.data.swimProgramWeek ? 'selected' : '';
-                                    return `<option value="${week}" ${selected}>Week ${week}</option>`;
-                                }).join('')}
-                            </select>
-                        </div>
-                    `;
-                }
-
-                if (!this.data.strengthReachedWeek20) {
-                    html += `
-                        <div class="form-group">
-                            <label>Strength Level (0-20)</label>
-                            <select id="overrideStrengthLevel">
-                                ${Array.from({length: 21}, (_, i) => {
-                                    const selected = i === this.data.currentStrengthLevel ? 'selected' : '';
-                                    return `<option value="${i}" ${selected}>Level ${i}</option>`;
-                                }).join('')}
-                            </select>
-                        </div>
-                    `;
-                }
-
-                html += `
-                    <div class="modal-buttons">
-                        <button class="btn btn-sm modal-close" onclick="window.app.closeModal('overrideModal')">Close</button>
-                        <button class="btn btn-sm btn-primary" onclick="window.app.handleOverride()">Apply</button>
-                    </div>
-                </div>
-                </div>
-                `;
-
-                return html;
-            }
-
-            renderSwimMaintenanceModal() {
-                if (!this.data.swimReachedWeek20) return '';
-
-                return `
-                    <div class="modal" id="swimMaintenanceModal">
-                        <div class="modal-content">
-                            <h3>🏊 Swimming Maintenance Pattern</h3>
-                            <div class="pattern-card ${this.data.swimMaintenancePattern === 'maintenance' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('swim', 'maintenance')">
-                                <div class="pattern-name">Maintenance</div>
-                                <div class="pattern-desc">Repeat Week 20 forever. Stay at peak.</div>
+                            <h3>Override Programs</h3>
+                            <div class="form-group">
+                                <label>Swim Program Week</label>
+                                <select id="overrideSwimWeek">${swimOptions}</select>
                             </div>
-                            <div class="pattern-card ${this.data.swimMaintenancePattern === 'retention' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('swim', 'retention')">
-                                <div class="pattern-name">Retention</div>
-                                <div class="pattern-desc">Alternate Week 20 (hard) ↔ Week 7 (recovery) every 2 weeks.</div>
-                            </div>
-                            <div class="pattern-card ${this.data.swimMaintenancePattern === 'buildback' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('swim', 'buildback')">
-                                <div class="pattern-name">Build Back</div>
-                                <div class="pattern-desc">Cycle weeks 16→17→18→19→20 indefinitely.</div>
+                            <div class="form-group">
+                                <label>Strength Level</label>
+                                <select id="overrideStrengthLevel">${strOptions}</select>
                             </div>
                             <div class="modal-buttons">
-                                <button class="btn btn-sm modal-close" onclick="window.app.closeModal('swimMaintenanceModal')">Done</button>
+                                <button class="btn btn-sm modal-close" onclick="window.app.closeModal('overrideModal')">Cancel</button>
+                                <button class="btn btn-sm btn-primary" onclick="window.app.handleOverride()">Apply</button>
                             </div>
                         </div>
                     </div>
                 `;
             }
 
-            renderStrengthMaintenanceModal() {
-                if (!this.data.strengthReachedWeek20) return '';
+            renderPatternModal(type) {
+                const isSwim = type === 'swim';
+                const reached = isSwim ? this.data.swimReachedWeek20 : this.data.strengthReachedWeek20;
+                if (!reached) return '';
+
+                const current = isSwim ? this.data.swimMaintenancePattern : this.data.strengthMaintenancePattern;
+                const modalId = isSwim ? 'swimMaintenanceModal' : 'strengthMaintenanceModal';
+                const title = isSwim ? 'Swimming Maintenance Pattern' : 'Strength Maintenance Pattern';
+                const hard = isSwim ? 'Week 20' : 'Level 20';
+                const easy = isSwim ? 'Week 7 (recovery)' : 'Level 10 (easier)';
+                const range = isSwim ? 'weeks 16-20' : 'levels 16-20';
+
+                const card = (key, name, desc) => `
+                    <div class="pattern-card ${current === key ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('${type}', '${key}')">
+                        <div class="pattern-name">${name} ${current === key ? '(active)' : ''}</div>
+                        <div class="pattern-desc">${desc}</div>
+                    </div>
+                `;
 
                 return `
-                    <div class="modal" id="strengthMaintenanceModal">
+                    <div class="modal" id="${modalId}">
                         <div class="modal-content">
-                            <h3>💪 Strength Maintenance Pattern</h3>
-                            <div class="pattern-card ${this.data.strengthMaintenancePattern === 'maintenance' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('strength', 'maintenance')">
-                                <div class="pattern-name">Maintenance</div>
-                                <div class="pattern-desc">Repeat Level 20 forever. Stay at peak.</div>
-                            </div>
-                            <div class="pattern-card ${this.data.strengthMaintenancePattern === 'retention' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('strength', 'retention')">
-                                <div class="pattern-name">Retention</div>
-                                <div class="pattern-desc">Alternate Level 20 (hard) ↔ Level 10 (recovery) every 2 weeks.</div>
-                            </div>
-                            <div class="pattern-card ${this.data.strengthMaintenancePattern === 'buildback' ? 'selected' : ''}" onclick="window.app.selectMaintenancePattern('strength', 'buildback')">
-                                <div class="pattern-name">Build Back</div>
-                                <div class="pattern-desc">Cycle levels 16→17→18→19→20 indefinitely.</div>
-                            </div>
+                            <h3>${title}</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 1rem;">
+                                You completed the 20-week program. Choose how to continue indefinitely.
+                                The rotation begins at the start of next calendar week. Switching
+                                patterns later restarts the rotation from the week you switch.
+                            </p>
+                            ${card('maintenance', 'Maintenance', 'Repeat ' + hard + ' every week. Hold your peak.')}
+                            ${card('retention', 'Retention', 'Alternate 2 weeks of ' + hard + ' with 2 weeks of ' + easy + '. Sustainable long-term.')}
+                            ${card('buildback', 'Build Back', 'Cycle through ' + range + ', one per week, then repeat. Variety in the peak range.')}
                             <div class="modal-buttons">
-                                <button class="btn btn-sm modal-close" onclick="window.app.closeModal('strengthMaintenanceModal')">Done</button>
+                                <button class="btn btn-sm btn-primary" onclick="window.app.closeModal('${modalId}')">Done</button>
                             </div>
                         </div>
                     </div>
+                `;
+            }
+
+            swimStatusButtons(slot) {
+                const s = this.findSwimSession(slot);
+                const doneCls = s && s.completed ? 'status-completed' : 'status-inactive';
+                const skipCls = s && !s.completed ? 'status-skipped' : 'status-inactive';
+                return `
+                    <button class="session-status ${doneCls}" onclick="window.app.logSwimSession('${slot}', true)">Completed</button>
+                    <button class="session-status ${skipCls}" onclick="window.app.logSwimSession('${slot}', false)">Skipped</button>
                 `;
             }
 
             renderSwimmingCard() {
                 const program = this.getSwimmingProgram();
-                const today = new Date().toDateString();
-                const week = this.getCurrentWeekNumber();
+                const week = this.getDisplaySwimWeek();
 
-                const wedSession = this.data.sessions.find(s =>
-                    s.type === 'swim' &&
-                    new Date(s.date).toDateString() === today &&
-                    s.week === week
-                );
-
-                let cardTitle = `🏊 Swimming`;
+                let title = 'Swimming - Week ' + week;
+                let patternBtn = '';
                 if (this.data.swimReachedWeek20) {
-                    cardTitle += ` - ${this.data.swimMaintenancePattern.toUpperCase()}`;
-                } else {
-                    cardTitle += ` - Week ${this.getDisplaySwimWeek()}`;
+                    title = 'Swimming - Maintenance (week ' + week + ' workout)';
+                    patternBtn = `<p style="margin-bottom: 1rem;"><button class="btn btn-secondary btn-sm" onclick="window.app.openModal('swimMaintenanceModal')">Change Pattern</button></p>`;
                 }
 
-                let html = `<div class="card"><h2>${cardTitle}</h2>`;
-
-                if (this.data.swimReachedWeek20) {
-                    html += `
-                        <p style="margin-bottom: 1rem;">
-                            <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('swimMaintenanceModal')">
-                                📋 Change Pattern
-                            </button>
-                        </p>
-                    `;
-                }
-
-                html += `
-                    <div class="tabs">
-                        <button class="tab-btn active" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('swimWed').classList.add('active')">
-                            Wednesday
-                        </button>
-                        <button class="tab-btn" onclick="document.querySelectorAll('.tab-content').forEach(e => e.classList.remove('active')); document.getElementById('swimFri').classList.add('active')">
-                            Friday
-                        </button>
-                    </div>
-
-                    <div id="swimWed" class="tab-content active">
-                        <div class="program-view">
-                            <h4>${program.wed.type}</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">${program.wed.total} | ${program.wed.time}</p>
-                            ${program.wed.sections.map(section => `
-                                <div class="program-section">
-                                    <div class="section-name">${section.name}</div>
-                                    <div class="section-distance">${section.distance}</div>
-                                    <div class="section-details">
-                                        ${section.details.map(d => `<div>• ${d}</div>`).join('')}
-                                    </div>
+                const renderDay = (day, label, tabId) => `
+                    <div class="program-view">
+                        <h4>${day.type}</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">${day.total} | ${day.time}</p>
+                        ${day.sections.map(section => `
+                            <div class="program-section">
+                                <div class="section-name">${section.name}</div>
+                                <div class="section-details">
+                                    ${section.details.map(d => `<div>- ${d}</div>`).join('')}
                                 </div>
-                            `).join('')}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="session-row">
+                        <span class="session-label">${label} Session</span>
+                        ${this.swimStatusButtons(tabId)}
+                    </div>
+                `;
+
+                return `
+                    <div class="card">
+                        <h2>${title}</h2>
+                        ${patternBtn}
+                        <div class="tabs">
+                            <button class="tab-btn active" id="tabBtnWed" onclick="window.app.showSwimTab('wed')">Wednesday</button>
+                            <button class="tab-btn" id="tabBtnFri" onclick="window.app.showSwimTab('fri')">Friday</button>
                         </div>
-                        <div class="session-row">
-                            <span class="session-label">Wed Session</span>
-                            <button class="session-status ${wedSession?.completed ? 'status-completed' : 'status-pending'}" onclick="window.app.logSession('swim', true)">
-                                ✓ Completed
-                            </button>
-                            <button class="session-status status-skip" onclick="window.app.logSession('swim', false)">
-                                ✗ Skipped
-                            </button>
+                        <div id="swimWed" class="tab-content active">
+                            ${renderDay(program.wed, 'Wednesday', 'wed')}
+                        </div>
+                        <div id="swimFri" class="tab-content">
+                            ${renderDay(program.fri, 'Friday', 'fri')}
                         </div>
                     </div>
+                `;
+            }
 
-                    <div id="swimFri" class="tab-content">
-                        <div class="program-view">
-                            <h4>${program.fri.type}</h4>
-                            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">${program.fri.total} | ${program.fri.time}</p>
-                            ${program.fri.sections.map(section => `
-                                <div class="program-section">
-                                    <div class="section-name">${section.name}</div>
-                                    <div class="section-distance">${section.distance}</div>
-                                    <div class="section-details">
-                                        ${section.details.map(d => `<div>• ${d}</div>`).join('')}
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="session-row">
-                            <span class="session-label">Fri Session</span>
-                            <button class="session-status status-pending" onclick="window.app.logSession('swim', true)">
-                                ✓ Completed
-                            </button>
-                            <button class="session-status status-skip" onclick="window.app.logSession('swim', false)">
-                                ✗ Skipped
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-
-                return html;
+            showSwimTab(slot) {
+                this.activeSwimTab = slot;
+                document.getElementById('swimWed').classList.toggle('active', slot === 'wed');
+                document.getElementById('swimFri').classList.toggle('active', slot === 'fri');
+                document.getElementById('tabBtnWed').classList.toggle('active', slot === 'wed');
+                document.getElementById('tabBtnFri').classList.toggle('active', slot === 'fri');
             }
 
             renderStrengthCard() {
                 const program = this.getStrengthProgram();
-                const today = new Date().toDateString();
-                const week = this.getCurrentWeekNumber();
+                const level = this.getDisplayStrengthLevel();
+                const s = this.findTodayStrengthSession();
+                const doneCls = s && s.completed ? 'status-completed' : 'status-inactive';
+                const skipCls = s && !s.completed ? 'status-skipped' : 'status-inactive';
 
-                const strengthSession = this.data.sessions.find(s =>
-                    s.type === 'strength' &&
-                    new Date(s.date).toDateString() === today &&
-                    s.week === week
-                );
-
-                let cardTitle = `💪 Strength`;
+                let title = 'Strength - Level ' + level;
+                let patternBtn = '';
                 if (this.data.strengthReachedWeek20) {
-                    cardTitle += ` - ${this.data.strengthMaintenancePattern.toUpperCase()}`;
-                } else {
-                    cardTitle += ` - Level ${this.getDisplayStrengthLevel()}`;
+                    title = 'Strength - Maintenance (level ' + level + ' workout)';
+                    patternBtn = `<p style="margin-bottom: 1rem;"><button class="btn btn-secondary btn-sm" onclick="window.app.openModal('strengthMaintenanceModal')">Change Pattern</button></p>`;
                 }
 
-                let html = `<div class="card"><h2>${cardTitle}</h2>`;
-
-                if (this.data.strengthReachedWeek20) {
-                    html += `
-                        <p style="margin-bottom: 1rem;">
-                            <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('strengthMaintenanceModal')">
-                                📋 Change Pattern
-                            </button>
-                        </p>
-                    `;
-                }
-
-                html += `
-                    <div class="program-view">
-                        <h4>${program.name}</h4>
-                        <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">${program.rounds} rounds | ${program.restTime} rest</p>
-                        ${program.exercises.map(ex => `
-                            <div class="program-section">
-                                <div class="section-name">${ex.name}</div>
-                                <div class="section-distance">${ex.reps}</div>
-                                <div class="section-details"><div>• ${ex.notes}</div></div>
-                            </div>
-                        `).join('')}
+                return `
+                    <div class="card">
+                        <h2>${title}</h2>
+                        ${patternBtn}
+                        <div class="program-view">
+                            <h4>${program.name}</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1rem;">${program.rounds} rounds | ${program.restTime} rest</p>
+                            ${program.exercises.map(ex => `
+                                <div class="program-section">
+                                    <div class="section-name">${ex.name}</div>
+                                    <div class="section-distance">${ex.reps}</div>
+                                    <div class="section-details"><div>- ${ex.notes}</div></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="session-row">
+                            <span class="session-label">This week's session (completing it advances one level)</span>
+                            <button class="session-status ${doneCls}" onclick="window.app.logStrengthSession(true)">Completed</button>
+                            <button class="session-status ${skipCls}" onclick="window.app.logStrengthSession(false)">Skipped</button>
+                        </div>
                     </div>
-
-                    <div class="session-row">
-                        <span class="session-label">Strength Session</span>
-                        <button class="session-status ${strengthSession?.completed ? 'status-completed' : 'status-pending'}" onclick="window.app.logSession('strength', true)">
-                            ✓ Completed
-                        </button>
-                        <button class="session-status status-skip" onclick="window.app.logSession('strength', false)">
-                            ✗ Skipped
-                        </button>
-                    </div>
-                </div>`;
-
-                return html;
+                `;
             }
 
             renderNutritionCard() {
+                const n = this.data.nutrition;
+                const total = n.breakfastCals + n.snack1Cals + n.lunchCals + n.snack2Cals + n.dinnerCals;
+                const box = (label, cals, time) => `
+                    <div class="stat-box">
+                        <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">${label}</div>
+                        <div class="stat-value">${cals}</div>
+                        <div class="stat-label">${time}</div>
+                    </div>
+                `;
                 return `
                     <div class="card">
-                        <h2>🍽️ Nutrition Guide</h2>
+                        <h2>Nutrition Guide</h2>
                         <div class="stat-grid">
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Breakfast</div>
-                                <div class="stat-value">${this.data.nutrition.breakfastCals}</div>
-                                <div class="stat-label">${this.data.nutrition.breakfastTime}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Snack 1</div>
-                                <div class="stat-value">${this.data.nutrition.snack1Cals}</div>
-                                <div class="stat-label">${this.data.nutrition.snack1Time}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Lunch</div>
-                                <div class="stat-value">${this.data.nutrition.lunchCals}</div>
-                                <div class="stat-label">${this.data.nutrition.lunchTime}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Snack 2</div>
-                                <div class="stat-value">${this.data.nutrition.snack2Cals}</div>
-                                <div class="stat-label">${this.data.nutrition.snack2Time}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Dinner</div>
-                                <div class="stat-value">${this.data.nutrition.dinnerCals}</div>
-                                <div class="stat-label">${this.data.nutrition.dinnerTime}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">Daily Total</div>
-                                <div class="stat-value">${this.data.nutrition.breakfastCals + this.data.nutrition.snack1Cals + this.data.nutrition.lunchCals + this.data.nutrition.snack2Cals + this.data.nutrition.dinnerCals}</div>
-                                <div class="stat-label">kcal/day</div>
-                            </div>
+                            ${box('Breakfast', n.breakfastCals, n.breakfastTime)}
+                            ${box('Snack 1', n.snack1Cals, n.snack1Time)}
+                            ${box('Lunch', n.lunchCals, n.lunchTime)}
+                            ${box('Snack 2', n.snack2Cals, n.snack2Time)}
+                            ${box('Dinner', n.dinnerCals, n.dinnerTime)}
+                            ${box('Daily Total', total, 'kcal/day')}
                         </div>
                     </div>
                 `;
             }
 
             renderProgressCard() {
-                const totalSessions = this.data.sessions.length;
-                const completedSessions = this.data.sessions.filter(s => s.completed).length;
-                const swimSessions = this.data.sessions.filter(s => s.type === 'swim').length;
-                const strengthSessions = this.data.sessions.filter(s => s.type === 'strength').length;
-                const completionRate = totalSessions > 0 ? Math.round((completedSessions / totalSessions) * 100) : 0;
+                const sessions = this.data.sessions;
+                const total = sessions.length;
+                const completed = sessions.filter(s => s.completed).length;
+                const swim = sessions.filter(s => s.type === 'swim').length;
+                const strength = sessions.filter(s => s.type === 'strength').length;
+                const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
                 return `
                     <div class="card">
-                        <h2>📊 Progress</h2>
+                        <h2>Progress</h2>
                         <div class="stat-grid">
-                            <div class="stat-box">
-                                <div class="stat-value">${completionRate}%</div>
-                                <div class="stat-label">Completion Rate</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">${completedSessions}</div>
-                                <div class="stat-label">Completed</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">${swimSessions}</div>
-                                <div class="stat-label">Swim Sessions</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-value">${strengthSessions}</div>
-                                <div class="stat-label">Strength Sessions</div>
-                            </div>
+                            <div class="stat-box"><div class="stat-value">${rate}%</div><div class="stat-label">Completion Rate</div></div>
+                            <div class="stat-box"><div class="stat-value">${completed}</div><div class="stat-label">Completed</div></div>
+                            <div class="stat-box"><div class="stat-value">${swim}</div><div class="stat-label">Swim Sessions</div></div>
+                            <div class="stat-box"><div class="stat-value">${strength}</div><div class="stat-label">Strength Sessions</div></div>
                         </div>
                     </div>
                 `;
@@ -1062,11 +916,11 @@
             renderDataCard() {
                 return `
                     <div class="card">
-                        <h2>💾 Data Management</h2>
+                        <h2>Data Management</h2>
                         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                            <button class="btn btn-secondary btn-sm" onclick="window.app.exportData()">📥 Export Data</button>
-                            <button class="btn btn-secondary btn-sm" onclick="window.app.importData()">📤 Import Data</button>
-                            <button class="btn btn-secondary btn-sm" onclick="if(confirm('Reset all data?')) { window.app.resetData(); }">🗑️ Reset All</button>
+                            <button class="btn btn-secondary btn-sm" onclick="window.app.exportData()">Export Data</button>
+                            <button class="btn btn-secondary btn-sm" onclick="window.app.importData()">Import Data</button>
+                            <button class="btn btn-secondary btn-sm" onclick="if(confirm('Reset ALL data? This cannot be undone.')) { window.app.resetData(); }">Reset All</button>
                         </div>
                     </div>
                 `;
@@ -1080,6 +934,7 @@
                 a.href = url;
                 a.download = 'workout_data.json';
                 a.click();
+                URL.revokeObjectURL(url);
             }
 
             importData() {
@@ -1088,11 +943,13 @@
                 input.accept = 'application/json';
                 input.onchange = (e) => {
                     const file = e.target.files[0];
+                    if (!file) return;
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         try {
                             const imported = JSON.parse(event.target.result);
-                            this.data = imported;
+                            localStorage.setItem('workoutData', JSON.stringify(imported));
+                            this.data = this.loadData();
                             this.saveData();
                             this.render();
                             alert('Data imported successfully');
@@ -1106,8 +963,8 @@
             }
 
             resetData() {
+                localStorage.removeItem('workoutData');
                 this.data = this.loadData();
-                this.saveData();
                 this.render();
             }
 
@@ -1115,8 +972,8 @@
                 if (!this.data.userWeight) {
                     document.getElementById('app').innerHTML = `
                         <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-                            <div class="card" style="max-width: 400px;">
-                                <h2 style="margin-bottom: 1rem;">Welcome! 👋</h2>
+                            <div class="card" style="max-width: 400px; width: 100%;">
+                                <h2 style="margin-bottom: 1rem;">Welcome</h2>
                                 <div class="form-group">
                                     <label>Enter Your Weight (kg)</label>
                                     <input type="number" id="weightInput" placeholder="e.g., 82">
@@ -1137,9 +994,22 @@
                     ${this.renderProgressCard()}
                     ${this.renderDataCard()}
                     ${this.renderOverrideModal()}
-                    ${this.renderSwimMaintenanceModal()}
-                    ${this.renderStrengthMaintenanceModal()}
+                    ${this.renderPatternModal('swim')}
+                    ${this.renderPatternModal('strength')}
                 `;
+
+                if (this.activeSwimTab === 'fri') {
+                    this.showSwimTab('fri');
+                }
+
+                if (this.justFinishedSwim) {
+                    this.justFinishedSwim = false;
+                    this.openModal('swimMaintenanceModal');
+                }
+                if (this.justFinishedStrength) {
+                    this.justFinishedStrength = false;
+                    this.openModal('strengthMaintenanceModal');
+                }
             }
 
             setWeight(weight) {
